@@ -1,0 +1,27 @@
+[
+  {
+    "name": "CustomerJourneySankey",
+    "width": 820,
+    "height": 420
+  },
+  {
+    "name": "MarketPulseLine",
+    "width": 820,
+    "height": 420
+  },
+  {
+    "name": "ComplianceObligationMatrix",
+    "width": 820,
+    "height": 420
+  },
+  {
+    "name": "UptimeKpiSpark",
+    "width": 520,
+    "height": 280
+  },
+  {
+    "name": "ScenarioOutcomeProjection",
+    "width": 820,
+    "height": 420
+  }
+]

@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OgulcanUI v0.1.0 Chart Catalog</title>
+  <meta name="description" content="OgulcanUI v0.1.0 - 50 zero-dependency chart Web Components available from a CDN.">
+  <link rel="icon" href="./ogulcanstudioicon.png" type="image/png">
+  <link rel="stylesheet" href="./dist/ogulcan-ui.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --page-bg: #f6f7f9;
+      --panel-bg: #ffffff;
+      --panel-soft: #f1f5f9;
+      --text: #111827;
+      --muted: #5b6472;
+      --faint: #8a94a6;
+      --line: #d8dee8;
+      --line-strong: #b8c2d0;
+      --blue: #1d4ed8;
+      --teal: #0f766e;
+      --amber: #b45309;
+      --violet: #6d28d9;
+      --red: #be123c;
+      --shadow: 0 18px 50px rgba(17, 24, 39, 0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--page-bg);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--text);
+      background: var(--page-bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    button {
+      border: 0;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px;
+      border-right: 1px solid var(--line);
+      background: #fbfcfe;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .brand img {
+      width: 48px;
+      height: 48px;
+      padding: 6px;
+      border-radius: var(--radius);
+      display: block;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #374151 0%, #111827 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+
+    .version-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .metric {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .side-section {
+      margin-top: 24px;
+    }
+
+    .side-heading {
+      margin: 0 0 8px;
+      color: var(--faint);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .search-box {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.13);
+    }
+
+    .category-list {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .category-button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 40px;
+      padding: 9px 10px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .category-button:hover,
+    .category-button.is-active {
+      background: var(--panel-bg);
+      border-color: var(--line);
+    }
+
+    .category-button.is-active {
+      box-shadow: 0 1px 0 rgba(17, 24, 39, 0.04);
+    }
+
+    .category-count {
+      min-width: 28px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .cdn-panel {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+    }
+
+    .cdn-panel code {
+      white-space: normal;
+      word-break: break-all;
+      color: var(--text);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.75rem;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--teal);
+      font-size: 0.8125rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 860px;
+      font-size: 2.25rem;
+      line-height: 1.08;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 780px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .button {
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .button.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .button.primary:hover {
+      color: #ffffff;
+      background: #1e40af;
+    }
+
+    .status-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 0.875rem;
+      font-weight: 650;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-bg);
+      color: var(--text);
+    }
+
+    .bench-panel {
+      display: grid;
+      gap: 14px;
+      margin: 0 0 18px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+      box-shadow: 0 1px 2px rgba(17, 24, 39, 0.03);
+    }
+
+    .bench-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bench-title {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.2;
+      font-weight: 850;
+    }
+
+    .bench-note {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    .bench-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .bench-cell {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8fafc;
+    }
+
+    .bench-cell strong {
+      display: block;
+      font-size: 1.1rem;
+      line-height: 1.1;
+    }
+
+    .bench-cell span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 750;
+    }
+
+    .compat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .compat-item {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+    }
+
+    .compat-item strong {
+      display: block;
+      font-size: 0.875rem;
+    }
+
+    .compat-item span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .chart-card {
+      display: grid;
+      grid-template-rows: 260px auto;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+      box-shadow: 0 1px 2px rgba(17, 24, 39, 0.03);
+    }
+
+    .chart-card.is-featured {
+      border-color: rgba(15, 118, 110, 0.35);
+      box-shadow: var(--shadow);
+    }
+
+    .preview {
+      min-width: 0;
+      min-height: 0;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .preview > * {
+      width: 100%;
+      height: 236px;
+      min-height: 180px;
+      display: block;
+    }
+
+    .card-body {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .card-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.2;
+      font-weight: 800;
+    }
+
+    .card-tag {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .category-chip {
+      min-height: 26px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #e8f3f1;
+      color: var(--teal);
+      font-size: 0.75rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .card-desc {
+      min-height: 42px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    .code-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .snippet {
+      min-width: 0;
+      margin: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111827;
+      color: #e5e7eb;
+      overflow: hidden;
+    }
+
+    .snippet code {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.75rem;
+    }
+
+    .empty-state {
+      display: none;
+      padding: 28px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .empty-state.is-visible {
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .main {
+        padding: 22px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .bench-grid,
+      .compat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .sidebar,
+      .main {
+        padding: 16px;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .catalog-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-card {
+        grid-template-rows: 230px auto;
+      }
+
+      .preview > * {
+        height: 206px;
+      }
+
+      .card-head,
+      .code-row,
+      .bench-head,
+      .bench-grid,
+      .compat-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Catalog controls">
+      <div class="brand">
+        <img src="./ogulcanstudioicon.png" alt="OgulcanUI">
+        <div>
+          <p class="brand-title">OgulcanUI</p>
+          <p class="brand-subtitle">Chart Web Components</p>
+        </div>
+      </div>
+
+      <div class="version-row" aria-label="Project stats">
+        <div class="metric"><strong>v0.1</strong><span>Status</span></div>
+        <div class="metric"><strong id="metric-count">50</strong><span>Charts</span></div>
+        <div class="metric"><strong>0</strong><span>Deps</span></div>
+      </div>
+
+      <div class="side-section">
+        <h2 class="side-heading">Search</h2>
+        <input id="search" class="search-box" type="search" placeholder="Find a chart" autocomplete="off">
+      </div>
+
+      <div class="side-section">
+        <h2 class="side-heading">Categories</h2>
+        <ul id="category-list" class="category-list"></ul>
+      </div>
+
+      <div class="side-section">
+        <h2 class="side-heading">CDN</h2>
+        <div class="cdn-panel">
+          <code id="cdn-code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ogulcan-ui@0.1.0/dist/ogulcan-ui.css"&gt; &lt;script src="https://cdn.jsdelivr.net/npm/ogulcan-ui@0.1.0/dist/ogulcan-ui.js"&gt;&lt;/script&gt;</code>
+          <button class="button" type="button" data-copy-cdn>Copy CDN</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <p class="eyebrow">v0.1 open-source catalog</p>
+          <h1>Paste one CDN line, then one chart tag.</h1>
+          <p class="lede">A focused set of 50 vanilla chart components for dashboards, monitoring, operations, risk, and planning surfaces.</p>
+        </div>
+        <div class="top-actions">
+          <button class="button primary" type="button" data-copy-featured>Copy featured chart</button>
+          <button class="button" type="button" data-show-all>Show all</button>
+        </div>
+      </div>
+
+      <div class="status-line" aria-live="polite">
+        <span class="status-pill" id="result-count">50 charts</span>
+        <span id="active-filter">All categories</span>
+      </div>
+
+      <section class="bench-panel" aria-labelledby="bench-title">
+        <div class="bench-head">
+          <div>
+            <h2 id="bench-title" class="bench-title">Device speed and WCAG chart check</h2>
+            <p class="bench-note" id="bench-status">Runs locally in this browser against the visible vanilla Web Components.</p>
+          </div>
+          <button class="button" type="button" data-run-bench>Run speed test</button>
+        </div>
+        <div class="bench-grid" aria-live="polite">
+          <div class="bench-cell"><strong id="bench-mount">Not run</strong><span>Avg mount per chart</span></div>
+          <div class="bench-cell"><strong id="bench-update">Not run</strong><span>Avg update per chart</span></div>
+          <div class="bench-cell"><strong id="bench-size">1 file</strong><span>JS bundle, 0 runtime deps</span></div>
+          <div class="bench-cell"><strong id="bench-a11y">50/50</strong><span>Chart text alternatives</span></div>
+        </div>
+        <div class="compat-grid" aria-label="Framework and browser support">
+          <div class="compat-item"><strong>Vanilla baseline</strong><span>HTML, CSS, JS, Custom Elements, SVG. No React, Svelte, bundler, or hydration required.</span></div>
+          <div class="compat-item"><strong>React and Svelte</strong><span>Use as normal custom-element tags; wrappers are optional and add app-side bytes only.</span></div>
+          <div class="compat-item"><strong>Older devices</strong><span>Static SVG, capped data parsing, ResizeObserver fallback, and no network fetch after the file loads.</span></div>
+        </div>
+      </section>
+
+      <section id="catalog-grid" class="catalog-grid" aria-label="OgulcanUI chart catalog"></section>
+      <div id="empty-state" class="empty-state">No charts match this search.</div>
+    </main>
+  </div>
+
+  <script src="./dist/components-manifest.js"></script>
+  <script src="./dist/ogulcan-ui.js"></script>
+  <script>
+    (function catalogApp() {
+      const VERSION = '0.1.0';
+      const CDN_CSS = `https://cdn.jsdelivr.net/npm/ogulcan-ui@${VERSION}/dist/ogulcan-ui.css`;
+      const CDN_JS = `https://cdn.jsdelivr.net/npm/ogulcan-ui@${VERSION}/dist/ogulcan-ui.js`;
+      const CDN_SNIPPET = `<link rel="stylesheet" href="${CDN_CSS}">\n<script src="${CDN_JS}"><\/script>`;
+
+      const CATEGORY_ORDER = [
+        'Flow Intelligence',
+        'Signal Exploration',
+        'Risk And Controls',
+        'Operating Pulse',
+        'Decision Surfaces'
+      ];
+
+      const CATEGORY_MAP = {
+        CustomerJourneySankey: 'Flow Intelligence',
+        RevenueStreamTreemap: 'Flow Intelligence',
+        ChannelMixDonut: 'Flow Intelligence',
+        ConversionPathFunnel: 'Flow Intelligence',
+        SupplyChainGantt: 'Flow Intelligence',
+        DependencyRadar: 'Flow Intelligence',
+        AllocationWaterfall: 'Flow Intelligence',
+        SegmentBridgePareto: 'Flow Intelligence',
+        ProductAdoptionStack: 'Flow Intelligence',
+        WorkflowStepArea: 'Flow Intelligence',
+        DemandForecastProjection: 'Signal Exploration',
+        AnomalyBandControl: 'Signal Exploration',
+        CohortRetentionHeatmap: 'Signal Exploration',
+        MarketPulseLine: 'Signal Exploration',
+        SensorDriftScatter: 'Signal Exploration',
+        QualityHistogram: 'Signal Exploration',
+        ScenarioSensitivityMultiLine: 'Signal Exploration',
+        VolatilityBoxplot: 'Signal Exploration',
+        GrowthCurveArea: 'Signal Exploration',
+        ThresholdRing: 'Signal Exploration',
+        ComplianceObligationMatrix: 'Risk And Controls',
+        IncidentSeverityPareto: 'Risk And Controls',
+        AccessPostureRadar: 'Risk And Controls',
+        RiskAppetiteGauge: 'Risk And Controls',
+        AuditFindingWaterfall: 'Risk And Controls',
+        ControlCoverageBullet: 'Risk And Controls',
+        FraudPatternScatter: 'Risk And Controls',
+        PolicyExceptionHeatmap: 'Risk And Controls',
+        ExposureLimitBars: 'Risk And Controls',
+        BreachRateRing: 'Risk And Controls',
+        UptimeKpiSpark: 'Operating Pulse',
+        QueueDepthBars: 'Operating Pulse',
+        LatencyControlChart: 'Operating Pulse',
+        CapacityStackedTrend: 'Operating Pulse',
+        ReleaseTrainGantt: 'Operating Pulse',
+        ServiceHealthMatrix: 'Operating Pulse',
+        ErrorBudgetLine: 'Operating Pulse',
+        ThroughputHistogram: 'Operating Pulse',
+        WorkforceUtilizationHBars: 'Operating Pulse',
+        BurnRateKpi: 'Operating Pulse',
+        PriceElasticityScatter: 'Decision Surfaces',
+        PortfolioOptimizationRadar: 'Decision Surfaces',
+        BudgetTradeoffWaterfall: 'Decision Surfaces',
+        PrioritizationTreemap: 'Decision Surfaces',
+        StrategyFunnel: 'Decision Surfaces',
+        ForecastConfidenceBoxplot: 'Decision Surfaces',
+        OpportunityPareto: 'Decision Surfaces',
+        InvestmentMixDonut: 'Decision Surfaces',
+        PlanVsActualBullet: 'Decision Surfaces',
+        ScenarioOutcomeProjection: 'Decision Surfaces'
+      };
+
+      const DESCRIPTIONS = {
+        CustomerJourneySankey: 'Trace customer movement across acquisition, activation, retention, and expansion paths.',
+        RevenueStreamTreemap: 'Compare revenue contribution across products, segments, and channels.',
+        ChannelMixDonut: 'Inspect channel share and mix changes with a compact donut view.',
+        ConversionPathFunnel: 'Show stage-by-stage conversion health across a decision path.',
+        SupplyChainGantt: 'Track milestones, delays, dependencies, and release lanes on a timeline.',
+        DependencyRadar: 'Score dependency pressure across teams, systems, vendors, and controls.',
+        AllocationWaterfall: 'Explain how a starting allocation becomes the final operating mix.',
+        SegmentBridgePareto: 'Rank segment bridge drivers and cumulative impact.',
+        ProductAdoptionStack: 'Show layered adoption across product cohorts.',
+        WorkflowStepArea: 'Visualize workflow states and process handoffs over time.',
+        DemandForecastProjection: 'Show forecast movement and expected future demand bands.',
+        AnomalyBandControl: 'Highlight anomaly bands, centerline drift, and limit pressure.',
+        CohortRetentionHeatmap: 'Map retention intensity across cohort periods.',
+        MarketPulseLine: 'Track market movement with a clean area-line preview.',
+        SensorDriftScatter: 'Expose drift clusters and outlying sensor behavior.',
+        QualityHistogram: 'Group quality outcomes into inspectable bins.',
+        ScenarioSensitivityMultiLine: 'Compare base, stress, and upside scenario sensitivity.',
+        VolatilityBoxplot: 'Summarize spread, quartiles, and outlier range.',
+        GrowthCurveArea: 'Emphasize growth direction, velocity, and inflection.',
+        ThresholdRing: 'Show threshold attainment and breach proximity.',
+        ComplianceObligationMatrix: 'Map obligation coverage across control families.',
+        IncidentSeverityPareto: 'Rank incident severity contributors by cumulative impact.',
+        AccessPostureRadar: 'Compare access posture across identity and control dimensions.',
+        RiskAppetiteGauge: 'Show current risk appetite against an operating band.',
+        AuditFindingWaterfall: 'Decompose audit findings from open risk to remediated state.',
+        ControlCoverageBullet: 'Compare control coverage against target and risk ranges.',
+        FraudPatternScatter: 'Review pattern clusters, separation, and outliers.',
+        PolicyExceptionHeatmap: 'Show exception concentration by period and domain.',
+        ExposureLimitBars: 'Compare exposure against visible limit pressure.',
+        BreachRateRing: 'Track breach rate and recovery progress.',
+        UptimeKpiSpark: 'Display uptime level, trend, and short-window movement.',
+        QueueDepthBars: 'Show queue depth by lane for operational backlogs.',
+        LatencyControlChart: 'Track latency behavior against upper and lower bands.',
+        CapacityStackedTrend: 'Compare available capacity, demand, and reserve.',
+        ReleaseTrainGantt: 'Track release trains, milestones, and delivery windows.',
+        ServiceHealthMatrix: 'Scan service health across systems and states.',
+        ErrorBudgetLine: 'Monitor error budget burn and remaining capacity.',
+        ThroughputHistogram: 'Group throughput samples into operational bins.',
+        WorkforceUtilizationHBars: 'Compare team utilization across lanes.',
+        BurnRateKpi: 'Summarize spend pace and runway movement.',
+        PriceElasticityScatter: 'Explore price response and demand sensitivity.',
+        PortfolioOptimizationRadar: 'Compare portfolio weights across decision axes.',
+        BudgetTradeoffWaterfall: 'Explain budget changes across tradeoff steps.',
+        PrioritizationTreemap: 'Rank initiatives by value, risk, and size.',
+        StrategyFunnel: 'Show strategic options moving through review stages.',
+        ForecastConfidenceBoxplot: 'Summarize confidence intervals and forecast spread.',
+        OpportunityPareto: 'Rank opportunities by impact and cumulative value.',
+        InvestmentMixDonut: 'Show investment allocation across buckets.',
+        PlanVsActualBullet: 'Compare actual performance against plan and target bands.',
+        ScenarioOutcomeProjection: 'Project outcomes across future scenarios.'
+      };
+
+      const FEATURED = new Set(['MarketPulseLine', 'CustomerJourneySankey', 'RiskAppetiteGauge', 'UptimeKpiSpark', 'ScenarioOutcomeProjection']);
+      const PALETTE = ['#1d4ed8', '#0f766e', '#b45309', '#6d28d9', '#be123c'];
+
+      const state = {
+        activeCategory: 'All',
+        query: ''
+      };
+
+      function toKebab(name) {
+        return 'ogulcan-' + String(name).replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      }
+
+      function toTitle(name) {
+        const formatter = window.OgulcanChartNames && window.OgulcanChartNames.formatComponentLabel;
+        return formatter ? formatter(name) : String(name).replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+      }
+
+      function attrsFor(name, tag, index) {
+        const klass = customElements.get(tag);
+        const observed = klass && Array.isArray(klass.observedAttributes) ? klass.observedAttributes : [];
+        const color = PALETTE[index % PALETTE.length];
+        const title = toTitle(name);
+
+        if (observed.includes('sparkline')) {
+          return {
+            title,
+            value: name === 'BurnRateKpi' ? '$418K' : '99.98%',
+            change: name === 'BurnRateKpi' ? '-6.2% MoM' : '+0.03%',
+            trend: name === 'BurnRateKpi' ? 'down' : 'up',
+            sparkline: '72,74,73,78,82,85,88',
+            color
+          };
+        }
+
+        if (observed.includes('min') && observed.includes('max')) {
+          return {
+            value: String(54 + (index % 37)),
+            min: '0',
+            max: '100',
+            label: title,
+            color
+          };
+        }
+
+        return {
+          label: title,
+          color,
+          data: sampleData(index)
+        };
+      }
+
+      function sampleData(index) {
+        const base = 24 + (index % 19);
+        return Array.from({ length: 8 }, (_, i) => base + Math.round(Math.sin((i + index) / 1.6) * 9) + i * 4).join(',');
+      }
+
+      function snippetFor(tag, attrs) {
+        const attrText = Object.entries(attrs)
+          .map(([key, value]) => `${key}="${String(value).replace(/"/g, '&quot;')}"`)
+          .join(' ');
+        return `<${tag} ${attrText}></${tag}>`;
+      }
+
+      function createChartElement(tag, attrs) {
+        const el = document.createElement(tag);
+        Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+        return el;
+      }
+
+      function waitFrame() {
+        return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+      }
+
+      function formatMs(value) {
+        if (!Number.isFinite(value)) return 'n/a';
+        return `${value < 10 ? value.toFixed(2) : value.toFixed(1)} ms`;
+      }
+
+      function countAccessibleCharts(scope) {
+        const hosts = Array.from(scope.querySelectorAll('.bench-chart-host > *'));
+        return hosts.filter((host) => {
+          const root = host.shadowRoot;
+          const label = (host.getAttribute('aria-label') || '').trim();
+          const summary = root && root.querySelector('.chart-a11y-summary');
+          const summaryText = (summary && summary.textContent || '').trim();
+          const svg = root && root.querySelector('svg');
+          return host.getAttribute('role') === 'img' &&
+            label.length >= 16 &&
+            summaryText.length >= 16 &&
+            (!svg || svg.getAttribute('aria-hidden') === 'true');
+        }).length;
+      }
+
+      async function runVisibleBench() {
+        const visible = filteredItems().slice(0, 24);
+        if (!visible.length) {
+          benchStatus.textContent = 'No visible charts to benchmark.';
+          return;
+        }
+
+        benchStatus.textContent = `Testing ${visible.length} visible chart${visible.length === 1 ? '' : 's'} on this device...`;
+        const sandbox = document.createElement('div');
+        sandbox.style.cssText = 'position:absolute;left:-10000px;top:0;width:360px;height:auto;contain:layout style paint;';
+        document.body.appendChild(sandbox);
+
+        const mounted = [];
+        const tMount = performance.now();
+        visible.forEach((item) => {
+          const host = document.createElement('div');
+          host.className = 'bench-chart-host';
+          host.style.cssText = 'width:320px;height:220px;margin:0 0 8px;contain:layout style paint;';
+          const chart = createChartElement(item.tag, item.attrs);
+          host.appendChild(chart);
+          sandbox.appendChild(host);
+          mounted.push({ item, chart });
+        });
+        await waitFrame();
+        const mountMs = performance.now() - tMount;
+
+        const tUpdate = performance.now();
+        mounted.forEach(({ item, chart }, index) => {
+          const next = sampleData(index + 11);
+          if (chart.hasAttribute('data')) chart.setAttribute('data', next);
+          else if (chart.hasAttribute('sparkline')) chart.setAttribute('sparkline', next);
+          else chart.setAttribute('label', item.title);
+        });
+        await waitFrame();
+        const updateMs = performance.now() - tUpdate;
+
+        const accessibleCount = countAccessibleCharts(sandbox);
+        sandbox.remove();
+
+        benchMount.textContent = formatMs(mountMs / visible.length);
+        benchUpdate.textContent = formatMs(updateMs / visible.length);
+        benchA11y.textContent = `${accessibleCount}/${visible.length}`;
+        benchStatus.textContent = `Average from ${visible.length} chart${visible.length === 1 ? '' : 's'} in this browser.`;
+      }
+
+      function buildItems() {
+        const manifest = Array.isArray(window.OGULCAN_UI_MANIFEST) ? window.OGULCAN_UI_MANIFEST : [];
+        return manifest.map((name, index) => {
+          const tag = toKebab(name);
+          const attrs = attrsFor(name, tag, index);
+          return {
+            name,
+            tag,
+            title: toTitle(name),
+            category: CATEGORY_MAP[name] || 'Charts',
+            description: DESCRIPTIONS[name] || `${toTitle(name)} chart component.`,
+            attrs,
+            snippet: snippetFor(tag, attrs),
+            featured: FEATURED.has(name)
+          };
+        });
+      }
+
+      const items = buildItems();
+      const grid = document.getElementById('catalog-grid');
+      const empty = document.getElementById('empty-state');
+      const search = document.getElementById('search');
+      const resultCount = document.getElementById('result-count');
+      const activeFilter = document.getElementById('active-filter');
+      const categoryList = document.getElementById('category-list');
+      const benchStatus = document.getElementById('bench-status');
+      const benchMount = document.getElementById('bench-mount');
+      const benchUpdate = document.getElementById('bench-update');
+      const benchA11y = document.getElementById('bench-a11y');
+
+      document.getElementById('metric-count').textContent = String(items.length);
+      document.getElementById('cdn-code').textContent = CDN_SNIPPET.replace(/\n/g, ' ');
+
+      function filteredItems() {
+        const q = state.query.trim().toLowerCase();
+        return items.filter((item) => {
+          const categoryOk = state.activeCategory === 'All' || item.category === state.activeCategory;
+          const queryOk = !q || [item.name, item.title, item.tag, item.category, item.description].join(' ').toLowerCase().includes(q);
+          return categoryOk && queryOk;
+        });
+      }
+
+      function renderCategories() {
+        const counts = new Map(CATEGORY_ORDER.map((category) => [category, 0]));
+        items.forEach((item) => counts.set(item.category, (counts.get(item.category) || 0) + 1));
+        const rows = ['All', ...CATEGORY_ORDER];
+        categoryList.replaceChildren(...rows.map((category) => {
+          const li = document.createElement('li');
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = `category-button${state.activeCategory === category ? ' is-active' : ''}`;
+          button.dataset.category = category;
+          const label = document.createElement('span');
+          label.textContent = category === 'All' ? 'All charts' : category;
+          const count = document.createElement('span');
+          count.className = 'category-count';
+          count.textContent = String(category === 'All' ? items.length : counts.get(category) || 0);
+          button.append(label, count);
+          li.appendChild(button);
+          return li;
+        }));
+      }
+
+      function renderGrid() {
+        const visible = filteredItems();
+        resultCount.textContent = `${visible.length} chart${visible.length === 1 ? '' : 's'}`;
+        activeFilter.textContent = state.activeCategory === 'All' ? 'All categories' : state.activeCategory;
+        empty.classList.toggle('is-visible', visible.length === 0);
+
+        const cards = visible.map((item) => {
+          const article = document.createElement('article');
+          article.className = `chart-card${item.featured ? ' is-featured' : ''}`;
+          article.dataset.name = item.name;
+
+          const preview = document.createElement('div');
+          preview.className = 'preview';
+          preview.appendChild(createChartElement(item.tag, item.attrs));
+
+          const body = document.createElement('div');
+          body.className = 'card-body';
+
+          const head = document.createElement('div');
+          head.className = 'card-head';
+          const titleBlock = document.createElement('div');
+          const title = document.createElement('h2');
+          title.className = 'card-title';
+          title.textContent = item.title;
+          const tag = document.createElement('span');
+          tag.className = 'card-tag';
+          tag.textContent = `<${item.tag}>`;
+          titleBlock.append(title, tag);
+          const chip = document.createElement('span');
+          chip.className = 'category-chip';
+          chip.textContent = item.category;
+          head.append(titleBlock, chip);
+
+          const desc = document.createElement('p');
+          desc.className = 'card-desc';
+          desc.textContent = item.description;
+
+          const codeRow = document.createElement('div');
+          codeRow.className = 'code-row';
+          const pre = document.createElement('pre');
+          pre.className = 'snippet';
+          const code = document.createElement('code');
+          code.textContent = item.snippet;
+          pre.appendChild(code);
+          const copy = document.createElement('button');
+          copy.className = 'button';
+          copy.type = 'button';
+          copy.textContent = 'Copy';
+          copy.dataset.copy = item.snippet;
+          codeRow.append(pre, copy);
+
+          body.append(head, desc, codeRow);
+          article.append(preview, body);
+          return article;
+        });
+
+        grid.replaceChildren(...cards);
+      }
+
+      async function copyText(text, button) {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            textarea.remove();
+          }
+          if (button) {
+            const original = button.textContent;
+            button.textContent = 'Copied';
+            window.setTimeout(() => { button.textContent = original; }, 1200);
+          }
+        } catch (err) {
+          if (button) button.textContent = 'Copy failed';
+        }
+      }
+
+      categoryList.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-category]');
+        if (!button) return;
+        state.activeCategory = button.dataset.category;
+        renderCategories();
+        renderGrid();
+      });
+
+      search.addEventListener('input', () => {
+        state.query = search.value;
+        renderGrid();
+      });
+
+      grid.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-copy]');
+        if (button) copyText(button.dataset.copy, button);
+      });
+
+      document.querySelector('[data-copy-cdn]').addEventListener('click', (event) => {
+        copyText(CDN_SNIPPET, event.currentTarget);
+      });
+
+      document.querySelector('[data-copy-featured]').addEventListener('click', (event) => {
+        const featured = items.find((item) => item.name === 'MarketPulseLine') || items[0];
+        copyText(featured ? featured.snippet : CDN_SNIPPET, event.currentTarget);
+      });
+
+      document.querySelector('[data-show-all]').addEventListener('click', () => {
+        state.activeCategory = 'All';
+        state.query = '';
+        search.value = '';
+        renderCategories();
+        renderGrid();
+      });
+
+      renderCategories();
+      renderGrid();
+      document.querySelector('[data-run-bench]').addEventListener('click', runVisibleBench);
+      window.setTimeout(runVisibleBench, 300);
+    })();
+  </script>
+</body>
+</html>

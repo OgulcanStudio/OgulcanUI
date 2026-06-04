@@ -1,0 +1,79 @@
+{
+  "name": "ogulcan-ui",
+  "version": "0.1.0",
+  "description": "50 zero-dependency vanilla Web Component charts: fast, small, WCAG-oriented, and usable from one CDN or repository file.",
+  "main": "dist/ogulcan-ui.js",
+  "style": "dist/ogulcan-ui.css",
+  "unpkg": "dist/ogulcan-ui.js",
+  "jsdelivr": "dist/ogulcan-ui.js",
+  "exports": {
+    ".": {
+      "default": "./dist/ogulcan-ui.js"
+    },
+    "./bank": {
+      "default": "./dist/ogulcan-bank.js"
+    },
+    "./styles.css": "./dist/ogulcan-ui.css",
+    "./manifest": "./dist/components.json"
+  },
+  "packageManager": "bun@1.3.14",
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "files": [
+    "dist",
+    "docs/charts.png",
+    "docs/speed.png",
+    "ogulcan",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "bun scripts/server.js",
+    "start": "bun scripts/server.js",
+    "build": "bun scripts/build.js",
+    "test": "bun scripts/run-test.js",
+    "verify": "bun scripts/run-verify.js",
+    "verify:a11y": "bun scripts/verify-accessibility.js",
+    "verify:browser": "bun scripts/verify-browser-metrics.js",
+    "verify:visual": "bun scripts/verify-visual-regression.js",
+    "verify:visual:update": "bun scripts/verify-visual-regression.js --update",
+    "verify:load": "bun scripts/verify-load-bench.js",
+    "verify:package": "bun scripts/verify-package.js",
+    "verify:component-gate": "bun scripts/verify-new-component-gate.js",
+    "add-component": "bun scripts/add-component.js",
+    "generate-charts": "bun scripts/generate-unique-charts.js",
+    "generate-banking-painters": "bun scripts/generate-banking-chart-painters.js",
+    "generate-playwright-specs": "node scripts/generate-playwright-specs.js",
+    "test:playwright": "node node_modules/@playwright/test/cli.js test",
+    "test:playwright:ui": "node node_modules/@playwright/test/cli.js test --ui",
+    "test:playwright:update": "node node_modules/@playwright/test/cli.js test --update-snapshots",
+    "test:playwright:structural": "node scripts/run-playwright-structural.js",
+    "test:playwright:enterprise": "node scripts/run-playwright-enterprise.js",
+    "verify:playwright-coverage": "bun scripts/verify-playwright-coverage.js",
+    "prepack": "bun run build"
+  },
+  "keywords": [
+    "web-components",
+    "ui-library",
+    "enterprise-ui",
+    "dashboard",
+    "data-visualization",
+    "charts",
+    "vanilla-js"
+  ],
+  "author": "Ogulcan Studio",
+  "license": "MIT",
+  "homepage": "https://ogulcan.studio",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrerduran/OgulcanUI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mrerduran/OgulcanUI/issues",
+    "email": "npm@ogulcan.studio"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}

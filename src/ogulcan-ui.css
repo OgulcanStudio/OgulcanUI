@@ -1,0 +1,438 @@
+:root {
+  /* --- Typography Defaults --- */
+  --font-sans: 'Outfit', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-mono: 'Fira Code', 'Courier New', Courier, monospace;
+
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px */
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* --- Border Radius Variants --- */
+  --radius-xs: 0.25rem;       /* 4px */
+  --radius-sm: 0.375rem;      /* 6px */
+  --radius-md: 0.5rem;        /* 8px */
+  --radius-lg: 0.5rem;        /* 8px */
+  --radius-xl: 0.5rem;        /* 8px */
+  --radius-2xl: 0.75rem;      /* 12px */
+  --radius-3xl: 1rem;         /* 16px */
+  --radius-full: 9999px;
+
+  /* --- Transition & Animation Tokens --- */
+  --transition-fast: 90ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-normal: 160ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-slow: 220ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-bounce: 180ms cubic-bezier(0.2, 0, 0, 1);
+
+  /* --- Raw RGB values for transparency manipulation --- */
+  --raw-primary: 37, 99, 235;     /* Blue #2563EB */
+  --raw-success: 5, 150, 105;     /* Emerald #059669 */
+  --raw-warning: 217, 119, 6;     /* Amber #D97706 */
+  --raw-danger: 220, 38, 38;      /* Red #DC2626 */
+  --raw-info: 8, 145, 178;        /* Cyan #0891B2 */
+  
+  --raw-neutral-50: 248, 250, 252;
+  --raw-neutral-100: 241, 245, 249;
+  --raw-neutral-200: 226, 232, 240;
+  --raw-neutral-300: 203, 213, 225;
+  --raw-neutral-400: 148, 163, 184;
+  --raw-neutral-500: 100, 116, 139;
+  --raw-neutral-600: 71, 85, 105;
+  --raw-neutral-700: 51, 65, 85;
+  --raw-neutral-800: 30, 41, 59;
+  --raw-neutral-900: 15, 23, 42;
+  --raw-neutral-950: 2, 6, 23;
+}
+
+/* Light Theme Variables */
+:root, [data-theme="light"] {
+  color-scheme: light;
+
+  /* Colors (Hex) */
+  --color-primary: #2563eb;
+  --color-primary-rgb: var(--raw-primary);
+  --color-primary-hover: #1d4ed8;
+  --color-primary-active: #1e40af;
+  --color-primary-light: rgba(var(--raw-primary), 0.09);
+
+  --color-success: #059669;
+  --color-success-rgb: var(--raw-success);
+  --color-success-hover: #047857;
+  --color-success-light: rgba(var(--raw-success), 0.09);
+
+  --color-warning: #d97706;
+  --color-warning-rgb: var(--raw-warning);
+  --color-warning-hover: #b45309;
+  --color-warning-light: rgba(var(--raw-warning), 0.1);
+
+  --color-danger: #dc2626;
+  --color-danger-rgb: var(--raw-danger);
+  --color-danger-hover: #b91c1c;
+  --color-danger-light: rgba(var(--raw-danger), 0.09);
+
+  --color-info: #0891b2;
+  --color-info-rgb: var(--raw-info);
+  --color-info-hover: #0e7490;
+  --color-info-light: rgba(var(--raw-info), 0.09);
+
+  /* Neutrals */
+  --color-neutral-50: rgb(var(--raw-neutral-50));
+  --color-neutral-100: rgb(var(--raw-neutral-100));
+  --color-neutral-200: rgb(var(--raw-neutral-200));
+  --color-neutral-300: rgb(var(--raw-neutral-300));
+  --color-neutral-400: rgb(var(--raw-neutral-400));
+  --color-neutral-500: rgb(var(--raw-neutral-500));
+  --color-neutral-600: rgb(var(--raw-neutral-600));
+  --color-neutral-700: rgb(var(--raw-neutral-700));
+  --color-neutral-800: rgb(var(--raw-neutral-800));
+  --color-neutral-900: rgb(var(--raw-neutral-900));
+  --color-neutral-950: rgb(var(--raw-neutral-950));
+
+  --color-neutral-50-rgb: var(--raw-neutral-50);
+  --color-neutral-100-rgb: var(--raw-neutral-100);
+  --color-neutral-200-rgb: var(--raw-neutral-200);
+  --color-neutral-300-rgb: var(--raw-neutral-300);
+  --color-neutral-400-rgb: var(--raw-neutral-400);
+  --color-neutral-500-rgb: var(--raw-neutral-500);
+  --color-neutral-600-rgb: var(--raw-neutral-600);
+  --color-neutral-700-rgb: var(--raw-neutral-700);
+  --color-neutral-800-rgb: var(--raw-neutral-800);
+  --color-neutral-900-rgb: var(--raw-neutral-900);
+  --color-neutral-950-rgb: var(--raw-neutral-950);
+
+  /* Backgrounds */
+  --bg-app: #f6f8fb;
+  --bg-card: #ffffff;
+  --bg-surface: #fdfefe;
+  --bg-surface-hover: #eef3f8;
+  --bg-input: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.94);
+
+  /* Borders & Dividers */
+  --border-color: #e2e8f0;
+  --border-color-hover: #cbd5e1;
+  --border-color-focus: #6366f1;
+
+  /* Text Colors */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-on-primary: #ffffff;
+  --text-on-accent: #ffffff;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.96);
+  --glass-border: rgba(203, 213, 225, 0.86);
+  --glass-blur: 0px;
+
+  /* Shadow Tokens */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 6px 14px -12px rgba(15, 23, 42, 0.36);
+  --shadow-lg: 0 10px 22px -18px rgba(15, 23, 42, 0.42);
+  --shadow-xl: 0 18px 34px -26px rgba(15, 23, 42, 0.46);
+  --shadow-inner: inset 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-glow: 0 0 0 3px rgba(var(--raw-primary), 0.12);
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Colors overrides (Hex) */
+  --color-primary: #60a5fa;
+  --color-primary-hover: #3b82f6;
+  --color-primary-active: #2563eb;
+  --color-primary-light: rgba(var(--raw-primary), 0.18);
+
+  --color-success: #34d399;
+  --color-success-hover: #10b981;
+  --color-success-light: rgba(var(--raw-success), 0.16);
+
+  --color-warning: #fbbf24;
+  --color-warning-hover: #f59e0b;
+  --color-warning-light: rgba(var(--raw-warning), 0.15);
+
+  --color-danger: #f87171;
+  --color-danger-hover: #ef4444;
+  --color-danger-light: rgba(var(--raw-danger), 0.15);
+
+  --color-info: #22d3ee;
+  --color-info-hover: #06b6d4;
+  --color-info-light: rgba(var(--raw-info), 0.16);
+
+  /* Backgrounds overrides */
+  --bg-app: #0b0f14;
+  --bg-card: #111820;
+  --bg-surface: #17202a;
+  --bg-surface-hover: #1f2a36;
+  --bg-input: #0d131a;
+  --bg-header: rgba(11, 15, 20, 0.94);
+
+  /* Borders & Dividers */
+  --border-color: #263241;
+  --border-color-hover: #344457;
+  --border-color-focus: #60a5fa;
+
+  /* Text Colors overrides */
+  --text-primary: #f9fafb;
+  --text-secondary: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-on-primary: #0f172a;
+  --text-on-accent: #0f172a;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(17, 24, 32, 0.96);
+  --glass-border: rgba(52, 68, 87, 0.88);
+  --glass-blur: 0px;
+
+  /* Shadow Tokens overrides */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 18px -16px rgba(0, 0, 0, 0.75);
+  --shadow-lg: 0 12px 26px -20px rgba(0, 0, 0, 0.82);
+  --shadow-xl: 0 18px 36px -26px rgba(0, 0, 0, 0.86);
+  --shadow-inner: inset 0 1px 2px 0 rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 0 3px rgba(var(--raw-primary), 0.18);
+}
+
+/* Fallback to media query if no explicit data-theme is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-primary: #60a5fa;
+    --color-primary-hover: #3b82f6;
+    --color-primary-active: #2563eb;
+    --color-primary-light: rgba(var(--raw-primary), 0.18);
+
+    --color-success: #34d399;
+    --color-success-hover: #10b981;
+    --color-success-light: rgba(var(--raw-success), 0.16);
+
+    --color-warning: #fbbf24;
+    --color-warning-hover: #f59e0b;
+    --color-warning-light: rgba(var(--raw-warning), 0.15);
+
+    --color-danger: #f87171;
+    --color-danger-hover: #ef4444;
+    --color-danger-light: rgba(var(--raw-danger), 0.15);
+
+    --color-info: #22d3ee;
+    --color-info-hover: #06b6d4;
+    --color-info-light: rgba(var(--raw-info), 0.16);
+
+    --bg-app: #0b0f14;
+    --bg-card: #111820;
+    --bg-surface: #17202a;
+    --bg-surface-hover: #1f2a36;
+    --bg-input: #0d131a;
+    --bg-header: rgba(11, 15, 20, 0.94);
+
+    --border-color: #263241;
+    --border-color-hover: #344457;
+    --border-color-focus: #60a5fa;
+
+    --text-primary: #f9fafb;
+    --text-secondary: #e5e7eb;
+    --text-muted: #9ca3af;
+    --text-on-primary: #0f172a;
+    --text-on-accent: #0f172a;
+
+    --glass-bg: rgba(17, 24, 32, 0.96);
+    --glass-border: rgba(52, 68, 87, 0.88);
+    --glass-blur: 0px;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 8px 18px -16px rgba(0, 0, 0, 0.75);
+    --shadow-lg: 0 12px 26px -20px rgba(0, 0, 0, 0.82);
+    --shadow-xl: 0 18px 36px -26px rgba(0, 0, 0, 0.86);
+    --shadow-inner: inset 0 1px 2px 0 rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 0 0 3px rgba(var(--raw-primary), 0.18);
+  }
+}
+
+/* Base resets and application level elements styling */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+ogulcan-accordion,
+ogulcan-active-users-graph,
+ogulcan-activity-timeline,
+ogulcan-alert-banner,
+ogulcan-area-chart,
+ogulcan-audio-player,
+ogulcan-avatar-group,
+ogulcan-bar-chart,
+ogulcan-battery-status,
+ogulcan-box-plot,
+ogulcan-bubble-chart,
+ogulcan-bullet-graph,
+ogulcan-calendar,
+ogulcan-candlestick-chart,
+ogulcan-checkbox-dropdown,
+ogulcan-circular-slider,
+ogulcan-cloud-region,
+ogulcan-code-snippet,
+ogulcan-color-picker,
+ogulcan-command-input,
+ogulcan-comp-status-matrix,
+ogulcan-countdown-timer,
+ogulcan-dashboard-layout,
+ogulcan-data-table,
+ogulcan-database-status-grid,
+ogulcan-db-conn-pool-meter,
+ogulcan-disk-io-meter,
+ogulcan-disk-map,
+ogulcan-donut-chart,
+ogulcan-file-uploader,
+ogulcan-finance-card,
+ogulcan-funnel-chart,
+ogulcan-gantt-timeline,
+ogulcan-garbage-col-meter,
+ogulcan-gauge-chart,
+ogulcan-heartbeat-pulse,
+ogulcan-info-tooltip,
+ogulcan-k8s-pod,
+ogulcan-kpi-trend,
+ogulcan-latency-dial,
+ogulcan-line-chart,
+ogulcan-metric-dial,
+ogulcan-metric-threshold-meter,
+ogulcan-multi-core,
+ogulcan-multi-gauge-chart,
+ogulcan-multi-kpi,
+ogulcan-network-graph-chart,
+ogulcan-network-traffic-meter,
+ogulcan-notifications,
+ogulcan-number-spinner,
+ogulcan-parallel-coords-chart,
+ogulcan-password-meter,
+ogulcan-pie-chart,
+ogulcan-ping-row,
+ogulcan-pod-traffic-grid,
+ogulcan-poll-widget,
+ogulcan-port-grid,
+ogulcan-pricing-card,
+ogulcan-profile-card,
+ogulcan-progress-ring,
+ogulcan-qr-code,
+ogulcan-query-latency-chart,
+ogulcan-queue-depth-meter,
+ogulcan-radar-chart,
+ogulcan-rating-stars,
+ogulcan-ratio-bar,
+ogulcan-replica-status,
+ogulcan-ring-progress-gauge,
+ogulcan-sankey-node,
+ogulcan-scatter-plot,
+ogulcan-search-autocomplete,
+ogulcan-search-tokenizer,
+ogulcan-server-node,
+ogulcan-services-console,
+ogulcan-severity-filter,
+ogulcan-spark-bar,
+ogulcan-sparkline-grid,
+ogulcan-sparkline-multi,
+ogulcan-sparkline-trend,
+ogulcan-stat-card,
+ogulcan-status-badge,
+ogulcan-status-grid,
+ogulcan-step-progress,
+ogulcan-stopwatch,
+ogulcan-system-terminal,
+ogulcan-tab-container,
+ogulcan-tag-cloud,
+ogulcan-tags-input,
+ogulcan-telemetry-status,
+ogulcan-theme-picker,
+ogulcan-thermometer,
+ogulcan-toast-controller,
+ogulcan-toggle-switch,
+ogulcan-tree-node,
+ogulcan-treemap-grid,
+ogulcan-virtual-list,
+ogulcan-virtual-touchpad,
+ogulcan-waveform,
+ogulcan-weather-widget,
+ogulcan-workflow-carousel {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+}
+
+img,
+svg,
+canvas,
+video {
+  max-width: 100%;
+}
+
+table {
+  max-width: 100%;
+}
+
+/* Glass panel helper styling */
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+/* Scrollbar customization for a premium look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-700);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-600);
+}

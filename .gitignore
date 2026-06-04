@@ -1,0 +1,64 @@
+# Dependencies (Bun-only; lock with bun.lock when present)
+node_modules/
+package-lock.json
+npm-shrinkwrap.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output - regenerate with: bun run build
+dist/
+ogulcan/
+src/ogulcan-ui.js
+src/components.json
+src/components-manifest.js
+
+# Verification / CI artifacts (regenerate with: bun run test)
+reports/
+scratch/
+test-results/
+playwright-report/
+blob-report/
+
+# Playwright failure artifacts (baselines under tests/playwright/baselines/ are committed)
+tests/playwright/baselines/*.png-snapshots/
+
+# Visual regression outputs (baselines are committed; actuals are ephemeral)
+reports/visual-actual/
+visual-baselines/staging/
+
+# Logs
+*.log
+npm-debug.log*
+bun-debug.log*
+
+# OS junk
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local env / secrets
+.env
+.env.*
+!.env.example
+
+# Editor / agent scratch (not library source)
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+agent-tools/
+ORCHESTRATOR_*.md
+
+# Cursor local session state (commit .cursor/rules/)
+.cursor/hooks/
+
+# Cursor / Grok session terminals (never commit)
+terminals/
+
+# Pack scratch
+*.tgz
+
+# Browser bench ephemeral captures
+browser-bench-capture/

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OgulcanUI Browser Bench</title>
+  <link rel="stylesheet" href="./dist/ogulcan-ui.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #0b1020;
+      color: #e5e7eb;
+    }
+
+    .status {
+      padding: 12px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    #bench-fixture {
+      position: fixed;
+      left: -99999px;
+      top: 0;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="status" id="status">OgulcanUI browser bench ready</div>
+  <div id="bench-fixture"></div>
+
+  <script src="./dist/ogulcan-ui.js"></script>
+  <script>
+    (function () {
+      const fixture = document.getElementById('bench-fixture');
+      const statusEl = document.getElementById('status');
+
+      function toTag(name) {
+        return 'ogulcan-' + name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      }
+
+      function sampleForAttr(attr) {
+        if (!attr) return 'live-value';
+        if (attr === 'data' || attr.endsWith('-data')) return '[1,2,3,4,5]';
+        if (attr === 'sparkline' || attr === 'values') return '12,24,18,32,28,40';
+        if (attr === 'headers') return 'Region,Status,Value';
+        if (attr === 'rows') return '[["West","Healthy","48"],["East","Watch","32"]]';
+        if (attr === 'events') return '[{"time":"09:10 PT","text":"Settlement completed","status":"success"}]';
+        if (attr === 'features') return '["Approval chain","PCI zone","Audit export"]';
+        if (attr === 'items') return '["Alpha","Beta","Gamma"]';
+        if (attr === 'avatars') return '[{"name":"Ada","initials":"AD"},{"name":"Lin","initials":"LN"}]';
+        if (attr === 'entries') return '[{"label":"Merchant settlement","subtitle":"Card present","time":"09:14 PT","state":"Cleared","amount":18245.12}]';
+        if (attr === 'order-data') return '{"orderId":"ORD-9","customer":"Treasury Ops","items":[{"label":"Wire batch","detail":"15m window","quantity":1,"amount":42000.55}],"subtotal":42000.55,"fees":10.2,"tax":0,"discount":-100,"total":41910.75}';
+        if (attr === 'series') return '[61200,61840,62550,62980,64120,65420,64910,66180]';
+        if (attr === 'steps') return 'Review,Approve,Release,Confirm';
+        if (attr === 'tags') return '["ops","risk","compliance"]';
+        if (attr === 'logs') return '["Ready","Watching","Released"]';
+        if (attr === 'colors') return '#6366f1,#10b981,#f59e0b';
+        if (attr === 'placeholder') return 'Search settlements';
+        if (attr === 'label') return 'Realtime metric';
+        if (attr === 'cta-label') return 'Approve';
+        if (attr === 'currency') return 'USD';
+        return 'live-value';
+      }
+
+      function hostDimensions(name) {
+        if (name === 'CheckoutSummary' || name === 'TransactionLedger' || name === 'DashboardLayout' || name === 'DataTable' || name === 'VirtualList' || name === 'TabContainer') {
+          return { width: 760, height: 420 };
+        }
+        if (/Chart|Grid|Timeline|Graph|Gauge|Status/i.test(name)) {
+          return { width: 640, height: 280 };
+        }
+        return { width: 360, height: 180 };
+      }
+
+      function tierInstanceCount(name, options) {
+        if (options && Number.isFinite(options.instances) && options.instances > 0) {
+          return options.instances;
+        }
+        if (name === 'CheckoutSummary' || name === 'TransactionLedger' || name === 'DashboardLayout' || name === 'DataTable' || name === 'VirtualList' || name === 'TabContainer') {
+          return 6;
+        }
+        if (/Chart|Grid|Timeline|Graph|Gauge|Status/i.test(name)) {
+          return 12;
+        }
+        return 24;
+      }
+
+      function settle() {
+        return new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+
+      function percentile(values, ratio) {
+        if (!values.length) return 0;
+        const sorted = [...values].sort((a, b) => a - b);
+        return sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * ratio))];
+      }
+
+      function normalizeText(value) {
+        return String(value || '').replace(/\s+/g, ' ').trim();
+      }
+
+      function isElementHidden(el) {
+        if (!el || typeof getComputedStyle !== 'function') return false;
+        const style = getComputedStyle(el);
+        return style.display === 'none' || style.visibility === 'hidden';
+      }
+
+      function resolveLabelledBy(root, value) {
+        if (!value) return '';
+        return value
+          .split(/\s+/)
+          .map((id) => {
+            const target = root.getElementById ? root.getElementById(id) : null;
+            return target ? normalizeText(target.textContent) : '';
+          })
+          .filter(Boolean)
+          .join(' ');
+      }
+
+      function findWrappingLabel(el) {
+        let current = el && el.parentElement;
+        while (current) {
+          if (current.tagName === 'LABEL') return current;
+          current = current.parentElement;
+        }
+        return null;
+      }
+
+      function accessibleName(el, root) {
+        if (!el) return '';
+
+        const ariaLabel = normalizeText(el.getAttribute('aria-label'));
+        if (ariaLabel) return ariaLabel;
+
+        const labelledBy = resolveLabelledBy(root, el.getAttribute('aria-labelledby'));
+        if (labelledBy) return labelledBy;
+
+        const id = el.getAttribute('id');
+        if (id) {
+          const explicitLabel = root.querySelector(`label[for="${CSS.escape(id)}"]`);
+          if (explicitLabel) {
+            const text = normalizeText(explicitLabel.textContent);
+            if (text) return text;
+          }
+        }
+
+        const wrappingLabel = findWrappingLabel(el);
+        if (wrappingLabel) {
+          const text = normalizeText(wrappingLabel.textContent);
+          if (text) return text;
+        }
+
+        const title = normalizeText(el.getAttribute('title'));
+        if (title) return title;
+
+        if (el.tagName === 'INPUT') {
+          const type = (el.getAttribute('type') || 'text').toLowerCase();
+          if (type === 'button' || type === 'submit' || type === 'reset') {
+            return normalizeText(el.getAttribute('value'));
+          }
+        }
+
+        return normalizeText(el.textContent);
+      }
+
+      function isSymbolOnlyLabel(name) {
+        if (!name) return false;
+        return /^[+\-<>‹›«»×✕✖▶►❚❚|/:;,.]+$/.test(name);
+      }
+
+      function isMeaningfulListChild(el) {
+        if (!el) return false;
+        if (el.getAttribute('role') === 'listitem') return true;
+        const tag = el.tagName.toLowerCase();
+        return tag === 'li';
+      }
+
+      function auditShadowAccessibility(name, el) {
+        const issues = [];
+        const warnings = [];
+        const root = el && el.shadowRoot;
+        if (!root) {
+          issues.push({ name: 'Shadow Root', desc: 'Component did not mount a shadow root for audit.' });
+          return { issues, warnings };
+        }
+
+        const hostRole = normalizeText(el.getAttribute('role'));
+        const hostLabel = accessibleName(el, document);
+        const summary = root.querySelector('.chart-a11y-summary');
+        const summaryText = normalizeText(summary && summary.textContent);
+
+        if (hostRole !== 'img') {
+          issues.push({
+            name: 'Chart Host Semantics',
+            desc: 'Chart host must expose role="img" so assistive technology receives one chart object.'
+          });
+        }
+
+        if (!hostLabel || hostLabel.length < 16) {
+          issues.push({
+            name: 'Chart Accessible Summary',
+            desc: 'Chart host must expose a meaningful aria-label summary.'
+          });
+        }
+
+        if (!summary || !summaryText || summaryText.length < 16) {
+          issues.push({
+            name: 'Chart Text Alternative',
+            desc: 'Shadow DOM must include .chart-a11y-summary text for WCAG chart coverage.'
+          });
+        }
+
+        const controls = root.querySelectorAll(
+          'button, input:not([type="hidden"]), select, textarea, a[href], [role="button"], [role="tab"], [role="switch"], [role="checkbox"], [role="menuitem"], [tabindex]'
+        );
+
+        controls.forEach((control) => {
+          if (isElementHidden(control)) return;
+          const nameValue = accessibleName(control, root);
+          const tag = control.tagName.toLowerCase();
+          const type = tag === 'input' ? (control.getAttribute('type') || 'text').toLowerCase() : '';
+
+          if (!nameValue) {
+            issues.push({
+              name: 'Accessible Name',
+              desc: `<${tag}> is interactive but has no accessible name.`
+            });
+            return;
+          }
+
+          if ((tag === 'button' || control.getAttribute('role') === 'button') && isSymbolOnlyLabel(nameValue)) {
+            issues.push({
+              name: 'Icon Button Label',
+              desc: `<${tag}> uses symbol-only text "${nameValue}" and needs aria-label or labelled content.`
+            });
+          }
+
+          if ((tag === 'input' || tag === 'textarea' || tag === 'select') && !control.hasAttribute('aria-label') && !control.hasAttribute('aria-labelledby')) {
+            if (type !== 'button' && type !== 'submit' && type !== 'reset') {
+              warnings.push({
+                name: 'Form Label Source',
+                desc: `<${tag}> relies on implicit text only; prefer aria-label, aria-labelledby, or a visible label.`
+              });
+            }
+          }
+
+          const tabIndex = Number(control.getAttribute('tabindex'));
+          if (!Number.isNaN(tabIndex) && tabIndex > 0) {
+            warnings.push({
+              name: 'Positive Tabindex',
+              desc: `<${tag}> uses tabindex="${tabIndex}", which can create confusing keyboard order.`
+            });
+          }
+        });
+
+        root.querySelectorAll('[role="list"]').forEach((list) => {
+          const children = Array.from(list.children || []).filter((child) => !isElementHidden(child));
+          if (children.length > 0 && !children.every(isMeaningfulListChild)) {
+            issues.push({
+              name: 'List Semantics',
+              desc: 'role="list" container has child elements without role="listitem" or <li>.'
+            });
+          }
+        });
+
+        root.querySelectorAll('svg').forEach((svg) => {
+          if (svg.getAttribute('aria-hidden') === 'true') return;
+          const label = accessibleName(svg, root);
+          const title = normalizeText(svg.querySelector('title') && svg.querySelector('title').textContent);
+          const desc = normalizeText(svg.querySelector('desc') && svg.querySelector('desc').textContent);
+          if (!label && !title && !desc) {
+            warnings.push({
+              name: 'SVG Semantics',
+              desc: 'SVG is neither hidden from assistive tech nor given an accessible label.'
+            });
+          }
+        });
+
+        if (/Alert|Telemetry|Realtime|Status|Stopwatch/i.test(name) &&
+            !root.querySelector('[aria-live], [role="status"], [role="alert"]')) {
+          warnings.push({
+            name: 'Live Region',
+            desc: 'Dynamic status component has no aria-live, role="status", or role="alert" region.'
+          });
+        }
+
+        return { issues, warnings };
+      }
+
+      function countNodes(root) {
+        if (!root) return 0;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_ALL);
+        let count = 0;
+        while (walker.nextNode()) count++;
+        return count;
+      }
+
+      async function mountComponent(name) {
+        const tag = toTag(name);
+        const dims = hostDimensions(name);
+        const host = document.createElement('div');
+        host.style.width = `${dims.width}px`;
+        host.style.height = `${dims.height}px`;
+        host.style.display = 'block';
+        host.style.contain = 'layout style paint';
+
+        const el = document.createElement(tag);
+        host.appendChild(el);
+        fixture.appendChild(host);
+        return { el, host };
+      }
+
+      async function mountManyComponents(name, count) {
+        const dims = hostDimensions(name);
+        const wrapper = document.createElement('div');
+        wrapper.style.display = 'grid';
+        wrapper.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        wrapper.style.gap = '12px';
+        wrapper.style.width = `${Math.max(1440, dims.width * Math.min(count, 4))}px`;
+        wrapper.style.contain = 'layout style paint';
+
+        const mounted = [];
+        for (let i = 0; i < count; i++) {
+          const host = document.createElement('div');
+          host.style.width = `${dims.width}px`;
+          host.style.height = `${dims.height}px`;
+          host.style.display = 'block';
+          host.style.contain = 'layout style paint';
+
+          const el = document.createElement(toTag(name));
+          host.appendChild(el);
+          wrapper.appendChild(host);
+          mounted.push({ el, host });
+        }
+
+        fixture.appendChild(wrapper);
+        return { wrapper, mounted };
+      }
+
+      function removeMounted(host) {
+        if (host && host.parentNode) {
+          host.parentNode.removeChild(host);
+        }
+      }
+
+      async function runOgulcanBrowserBenchFor(name) {
+        statusEl.textContent = `Running ${name}`;
+        const tag = toTag(name);
+        const Cls = customElements.get(tag);
+        if (!Cls) {
+          throw new Error(`Missing registration for ${tag}`);
+        }
+
+        const attrs = Cls.observedAttributes || [];
+        const primaryAttr = attrs.find((attr) => attr === 'data' || attr.endsWith('-data')) || attrs[0] || null;
+        const mountRuns = [];
+        const updateRuns = [];
+        const burstRuns = [];
+        let domNodes = 0;
+        let shadowHtmlBytes = 0;
+
+        for (let i = 0; i < 5; i++) {
+          const t0 = performance.now();
+          const mounted = await mountComponent(name);
+          const mountMs = performance.now() - t0;
+          mountRuns.push(mountMs);
+          await settle();
+
+          if (i === 0) {
+            domNodes = countNodes(mounted.el.shadowRoot);
+            shadowHtmlBytes = mounted.el.shadowRoot ? mounted.el.shadowRoot.innerHTML.length : 0;
+          }
+
+          if (primaryAttr) {
+            mounted.el.setAttribute(primaryAttr, sampleForAttr(primaryAttr));
+            await settle();
+
+            const t1 = performance.now();
+            mounted.el.setAttribute(primaryAttr, sampleForAttr(primaryAttr));
+            updateRuns.push(performance.now() - t1);
+            await settle();
+
+            for (let tick = 0; tick < 20; tick++) {
+              const tickValue = primaryAttr === 'series'
+                ? JSON.stringify([61200 + tick, 61840 + tick, 62550 + tick, 62980 + tick])
+                : primaryAttr === 'order-data'
+                  ? `{"orderId":"ORD-${tick}","customer":"Treasury Ops","items":[{"label":"Wire batch","detail":"15m window","quantity":1,"amount":${42000 + tick}}],"subtotal":${42000 + tick},"fees":10.2,"tax":0,"discount":-100,"total":${41910 + tick}}`
+                  : primaryAttr === 'entries'
+                    ? `[{"label":"Merchant settlement","subtitle":"Card present","time":"09:${10 + tick} PT","state":"Cleared","amount":${18245 + tick}}]`
+                    : primaryAttr === 'data' || primaryAttr.endsWith('-data')
+                      ? `[${tick},${tick + 1},${tick + 2},${tick + 3}]`
+                      : primaryAttr === 'sparkline' || primaryAttr === 'values'
+                        ? `${tick + 1},${tick + 2},${tick + 3},${tick + 4}`
+                        : `${sampleForAttr(primaryAttr)}-${tick}`;
+
+              const tBurst = performance.now();
+              mounted.el.setAttribute(primaryAttr, tickValue);
+              burstRuns.push(performance.now() - tBurst);
+              await settle();
+            }
+          }
+
+          removeMounted(mounted.host);
+          await settle();
+        }
+
+        statusEl.textContent = `Completed ${name}`;
+
+        return {
+          name,
+          observedAttributesCount: attrs.length,
+          mountAvgMs: average(mountRuns),
+          mountP95Ms: percentile(mountRuns, 0.95),
+          updateAvgMs: average(updateRuns),
+          updateP95Ms: percentile(updateRuns, 0.95),
+          burstAvgMs: average(burstRuns),
+          burstP95Ms: percentile(burstRuns, 0.95),
+          domNodes,
+          shadowHtmlBytes
+        };
+      }
+
+      async function runOgulcanAccessibilityAuditFor(name) {
+        statusEl.textContent = `Auditing ${name}`;
+        const tag = toTag(name);
+        const Cls = customElements.get(tag);
+        if (!Cls) {
+          throw new Error(`Missing registration for ${tag}`);
+        }
+
+        const attrs = Cls.observedAttributes || [];
+        const mounted = await mountComponent(name);
+        try {
+          attrs.forEach((attr) => mounted.el.setAttribute(attr, sampleForAttr(attr)));
+          await settle();
+          const audited = auditShadowAccessibility(name, mounted.el);
+          return {
+            name,
+            issues: audited.issues,
+            warnings: audited.warnings
+          };
+        } finally {
+          removeMounted(mounted.host);
+          await settle();
+          statusEl.textContent = `Completed ${name}`;
+        }
+      }
+
+      async function runOgulcanLoadBenchFor(name, options) {
+        statusEl.textContent = `Load bench ${name}`;
+        const tag = toTag(name);
+        const Cls = customElements.get(tag);
+        if (!Cls) {
+          throw new Error(`Missing registration for ${tag}`);
+        }
+
+        const attrs = Cls.observedAttributes || [];
+        const primaryAttr = attrs.find((attr) => attr === 'data' || attr.endsWith('-data')) || attrs[0] || null;
+        const instances = tierInstanceCount(name, options || {});
+
+        const tMount = performance.now();
+        const batch = await mountManyComponents(name, instances);
+        const batchMountMs = performance.now() - tMount;
+        await settle();
+
+        const totalDomNodes = batch.mounted.reduce((sum, mounted) => sum + countNodes(mounted.el.shadowRoot), 0);
+        const totalShadowHtmlBytes = batch.mounted.reduce(
+          (sum, mounted) => sum + (mounted.el.shadowRoot ? mounted.el.shadowRoot.innerHTML.length : 0),
+          0
+        );
+
+        let updateWaveMs = 0;
+        const burstWaveRuns = [];
+
+        if (primaryAttr) {
+          batch.mounted.forEach((mounted) => {
+            mounted.el.setAttribute(primaryAttr, sampleForAttr(primaryAttr));
+          });
+          await settle();
+
+          const tUpdate = performance.now();
+          batch.mounted.forEach((mounted, index) => {
+            mounted.el.setAttribute(primaryAttr, buildTickValue(primaryAttr, index, 0));
+          });
+          updateWaveMs = performance.now() - tUpdate;
+          await settle();
+
+          for (let wave = 1; wave <= 10; wave++) {
+            const tBurst = performance.now();
+            batch.mounted.forEach((mounted, index) => {
+              mounted.el.setAttribute(primaryAttr, buildTickValue(primaryAttr, index, wave));
+            });
+            burstWaveRuns.push(performance.now() - tBurst);
+            await settle();
+          }
+        }
+
+        if (batch.wrapper && batch.wrapper.parentNode) {
+          batch.wrapper.parentNode.removeChild(batch.wrapper);
+        }
+        await settle();
+        statusEl.textContent = `Completed ${name}`;
+
+        return {
+          name,
+          instances,
+          observedAttributesCount: attrs.length,
+          batchMountMs,
+          perInstanceMountMs: instances > 0 ? batchMountMs / instances : 0,
+          updateWaveMs,
+          updateWavePerInstanceMs: instances > 0 ? updateWaveMs / instances : 0,
+          burstWaveAvgMs: average(burstWaveRuns),
+          burstWaveP95Ms: percentile(burstWaveRuns, 0.95),
+          totalDomNodes,
+          totalShadowHtmlBytes
+        };
+      }
+
+      function buildTickValue(primaryAttr, index, tick) {
+        if (primaryAttr === 'series') {
+          return JSON.stringify([61200 + tick + index, 61840 + tick, 62550 + index, 62980 + tick]);
+        }
+        if (primaryAttr === 'order-data') {
+          return `{"orderId":"ORD-${tick}-${index}","customer":"Treasury Ops","items":[{"label":"Wire batch","detail":"15m window","quantity":1,"amount":${42000 + tick + index}}],"subtotal":${42000 + tick + index},"fees":10.2,"tax":0,"discount":-100,"total":${41910 + tick + index}}`;
+        }
+        if (primaryAttr === 'entries') {
+          return `[{"label":"Merchant settlement","subtitle":"Card present","time":"09:${10 + tick} PT","state":"Cleared","amount":${18245 + tick + index}}]`;
+        }
+        if (primaryAttr === 'data' || primaryAttr.endsWith('-data')) {
+          return `[${tick + index},${tick + index + 1},${tick + index + 2},${tick + index + 3}]`;
+        }
+        if (primaryAttr === 'sparkline' || primaryAttr === 'values') {
+          return `${tick + index + 1},${tick + index + 2},${tick + index + 3},${tick + index + 4}`;
+        }
+        return `${sampleForAttr(primaryAttr)}-${index}-${tick}`;
+      }
+
+      function average(values) {
+        if (!values.length) return 0;
+        return values.reduce((sum, value) => sum + value, 0) / values.length;
+      }
+
+      window.runOgulcanBrowserBenchFor = runOgulcanBrowserBenchFor;
+      window.runOgulcanAccessibilityAuditFor = runOgulcanAccessibilityAuditFor;
+      window.runOgulcanLoadBenchFor = runOgulcanLoadBenchFor;
+      window.__OGULCAN_BENCH_READY__ = true;
+    })();
+  </script>
+</body>
+</html>

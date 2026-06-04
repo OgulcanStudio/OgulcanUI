@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OgulcanUI v1.2 — Compliance Verifier</title>
+  <link rel="icon" href="./ogulcanstudioicon.png" type="image/png">
+  
+  <style>
+    :root {
+      --glow-primary: rgba(99, 102, 241, 0.15);
+      --bg-gradient: radial-gradient(circle at 50% 0%, #0d1224 0%, #05070f 100%);
+      --color-primary: #6366f1;
+      --color-success: #10b981;
+      --color-warning: #fbbf24;
+      --color-danger: #ef4444;
+      --text-primary: #ffffff;
+      --text-muted: #9ca3af;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --glass-bg: rgba(17, 24, 39, 0.7);
+      --glass-border: rgba(55, 65, 81, 0.8);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      padding: clamp(1rem, 4vw, 3rem) clamp(0.75rem, 3vw, 1.5rem);
+      margin: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      position: relative;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, #06b6d4 100%);
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 7vw, 2.5rem);
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff 30%, var(--color-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin: 0.5rem 0 1.5rem 0;
+    }
+
+    /* Overview Stats Card */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent-color, var(--color-primary));
+    }
+
+    .stat-val {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Filter Toolbar */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      padding: 0.75rem 1.25rem;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      min-width: 0;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      min-width: 0;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: var(--color-primary);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .search-input {
+      font-family: inherit;
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem 0.5rem 2.25rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--text-primary);
+      outline: none;
+      width: 250px;
+      transition: all 300ms ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--glow-primary);
+      width: 300px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Component List Grid */
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: clamp(0.875rem, 3vw, 1.5rem);
+    }
+
+    .component-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .component-card:hover {
+      border-color: var(--accent-color, var(--color-primary));
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
+    }
+
+    .component-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .component-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-passed {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--color-success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-warning {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--color-warning);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .badge-failed {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--color-danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-pending {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .component-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      overflow-wrap: anywhere;
+    }
+
+    .results-summary {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Modal / Details Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 7, 15, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms ease;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer {
+      width: 100%;
+      max-width: 600px;
+      height: 100%;
+      background: #0b0f19;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 0;
+    }
+
+    .drawer-overlay.active .drawer {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .drawer-title-group h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 200ms;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
+    }
+
+    .drawer-content {
+      padding: 1.5rem;
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .audit-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .audit-section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.25rem;
+    }
+
+    .audit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+    }
+
+    .audit-status-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .audit-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      min-width: 0;
+    }
+
+    .audit-item-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .audit-item-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .audit-item-err {
+      color: var(--color-danger);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      white-space: pre-wrap;
+      background: rgba(239, 68, 68, 0.05);
+      padding: 6px 10px;
+      border-radius: 4px;
+      border-left: 2px solid var(--color-danger);
+    }
+
+    /* Sandbox Sandbox */
+    #sandbox-container {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      width: 300px;
+      height: 300px;
+      visibility: hidden;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem;
+      }
+      .filter-tabs {
+        margin-inline: -0.25rem;
+      }
+      .search-input {
+        width: 100%;
+      }
+      .search-input:focus {
+        width: 100%;
+      }
+      .drawer {
+        max-width: 100%;
+      }
+      .drawer-header,
+      .drawer-content {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="brand-badge"><img src="./ogulcanstudioicon.png" alt="Ogulcan Studio" width="48" height="48" style="width:100%;height:100%;object-fit:cover;border-radius:12px;"></div>
+      <h1>OgulcanUI Compliance Verifier</h1>
+      <p class="subtitle">Real-time dynamic ES module auditing & mounting dashboard.</p>
+    </header>
+
+    <!-- Overview Stats -->
+    <div class="overview-grid">
+      <div class="stat-card" style="--accent-color: var(--color-primary)">
+        <span class="stat-val" id="stat-total">0</span>
+        <span class="stat-label">Total Audited</span>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--color-success)">
+        <span class="stat-val" id="stat-passed" style="color: var(--color-success)">0</span>
+        <span class="stat-label">Passed</span>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--color-warning)">
+        <span class="stat-val" id="stat-warnings" style="color: var(--color-warning)">0</span>
+        <span class="stat-label">Warnings</span>
+      </div>
+      <div class="stat-card" style="--accent-color: var(--color-danger)">
+        <span class="stat-val" id="stat-failed" style="color: var(--color-danger)">0</span>
+        <span class="stat-label">Critical Failures</span>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="filter-tabs">
+        <button class="tab-btn active" data-filter="all">All</button>
+        <button class="tab-btn" data-filter="passed">Passed</button>
+        <button class="tab-btn" data-filter="warnings">Warnings</button>
+        <button class="tab-btn" data-filter="failed">Failed</button>
+      </div>
+
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+        </svg>
+        <input type="text" class="search-input" id="search-input" placeholder="Search components..." autocomplete="off">
+      </div>
+    </div>
+
+    <!-- Components Grid -->
+    <div class="components-grid" id="components-grid">
+      <!-- Generated dynamically -->
+    </div>
+  </div>
+
+  <!-- Detail Drawer -->
+  <div class="drawer-overlay" id="drawer-overlay">
+    <div class="drawer">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <h2 id="drawer-comp-name">Component Details</h2>
+          <div class="component-tag" id="drawer-comp-tag">&lt;ogulcan-accordion&gt;</div>
+        </div>
+        <button class="close-btn" id="drawer-close">&times;</button>
+      </div>
+      <div class="drawer-content" id="drawer-content">
+        <!-- Generated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Real DOM Mount Sandbox -->
+  <div id="sandbox-container"></div>
+
+  <script src="./scripts/verify-criteria.js"></script>
+  <script>
+    const C = window.OgulcanVerifyCriteria;
+    const CONTRACT = {
+      stylePlaceholder: '/* [style.css] */',
+      templatePlaceholder: '<!-- [template.html] -->',
+      toKebabTag(name) {
+        return 'ogulcan-' + name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      },
+      toClassName(name) {
+        return `Ogulcan${name}`;
+      },
+      inlineAssets(js, css, html) {
+        return js
+          .replace(/\/\*\s*\[style\.css\]\s*\*\//g, () => css.trim())
+          .replace(/<!--\s*\[template\.html\]\s*-->/g, () => html.trim())
+          .replace(/\bexport\s+class\s+/, 'class ');
+      },
+      auditTemplate(name, files) {
+        const issues = [];
+        const warnings = [];
+        const tag = this.toKebabTag(name);
+        const className = this.toClassName(name);
+        const { js, css, html } = files;
+
+        if (!js) issues.push({ name: 'Missing index.js', desc: 'Every component requires index.js.' });
+        if (!css.trim()) issues.push({ name: 'Missing index.css', desc: 'Styles must live in index.css (use :host).' });
+        if (!html.trim()) issues.push({ name: 'Missing index.html', desc: 'Markup must live in index.html (no logic).' });
+        if (!js.includes(this.stylePlaceholder)) {
+          issues.push({ name: 'Style Placeholder', desc: `index.js must include "${this.stylePlaceholder}" inside shadow markup for build inlining.` });
+        }
+        if (!js.includes(this.templatePlaceholder)) {
+          issues.push({ name: 'Template Placeholder', desc: `index.js must include "${this.templatePlaceholder}" for build inlining.` });
+        }
+        if (css && !/:host\b/.test(css)) issues.push({ name: ':host Rule', desc: 'index.css must scope styles with a :host selector.' });
+        if (!/\bexport\s+class\s+/.test(js)) issues.push({ name: 'ES Module Export', desc: 'Export the component class: export class OgulcanX extends HTMLElement.' });
+        if (!(new RegExp(`class\\s+${className}\\s+extends\\s+HTMLElement`)).test(js)) {
+          issues.push({ name: 'Class Naming', desc: `Expected "class ${className} extends HTMLElement".` });
+        }
+        if (!/attachShadow\s*\(\s*\{[^}]*mode\s*:\s*['"]open['"]/.test(js)) {
+          issues.push({ name: 'Open Shadow Root', desc: 'Call this.attachShadow({ mode: "open" }) in the constructor.' });
+        }
+        const defineRe = new RegExp(`customElements\\.define\\(\\s*['"]${tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]\\s*,\\s*${className}\\s*\\)`);
+        if (!defineRe.test(js)) {
+          issues.push({ name: 'Custom Element Registration', desc: `Register with customElements.define('${tag}', ${className});` });
+        }
+        if (!/\bdisconnectedCallback\s*\(/.test(js)) {
+          issues.push({ name: 'disconnectedCallback', desc: 'Implement disconnectedCallback for timers, rAF, observers, and document listeners.' });
+        }
+
+        const observedMatch = js.match(/observedAttributes\s*\(\)\s*\{\s*return\s*\[([^\]]*)\]/);
+        const observedAttrs = observedMatch
+          ? observedMatch[1].split(',').map((s) => s.trim().replace(/['"]/g, '')).filter(Boolean)
+          : [];
+        if (observedAttrs.length > 0) {
+          if (!/\battributeChangedCallback\s*\(/.test(js)) {
+            issues.push({ name: 'attributeChangedCallback', desc: 'Required when observedAttributes is non-empty.' });
+          } else if (!/if\s*\(\s*(?:oldValue|o)\s*===\s*(?:newValue|nv)\s*\)\s*return/.test(js)) {
+            issues.push({ name: 'Attribute Dedup', desc: 'attributeChangedCallback must bail when old and new values are equal.' });
+          }
+          if (!/\bupgradeProperty\s*\(/.test(js)) {
+            issues.push({ name: 'upgradeProperty', desc: 'Call upgradeProperty() in connectedCallback for each observed property.' });
+          }
+        }
+
+        const usesRender = /\brender\s*\(\s*\)\s*\{/.test(js);
+        const usesStructure = /\brenderStructure\s*\(\s*\)\s*\{/.test(js);
+        const mountsInConnected =
+          /\bconnectedCallback\s*\([^)]*\)\s*\{[\s\S]{0,1200}shadowRoot\.innerHTML/.test(js) &&
+          js.includes(this.stylePlaceholder) &&
+          js.includes(this.templatePlaceholder);
+        if (!usesRender && !usesStructure && !mountsInConnected) {
+          issues.push({
+            name: 'Lifecycle Render',
+            desc: 'Implement render(), renderStructure(), or mount shadow DOM in connectedCallback with build placeholders.'
+          });
+        }
+        if (usesRender && usesStructure) {
+          warnings.push({ name: 'Dual Render Methods', desc: 'Prefer either render() or renderStructure(), not both, unless structure is a one-time setup.' });
+        }
+        if (/<script/i.test(html)) issues.push({ name: 'Template Script', desc: 'index.html must not contain <script> tags.' });
+        if (/\bon[a-z]+\s*=/i.test(html)) issues.push({ name: 'Template Inline Events', desc: 'Bind events in index.js only.' });
+
+        return { issues, warnings };
+      }
+    };
+    const state = {
+      components: [], // list of component objects
+      currentFilter: 'all',
+      searchQuery: ''
+    };
+
+    // Initialize Page
+    async function init() {
+      setupEventListeners();
+      
+      try {
+        const response = await fetch('./src/components.json');
+        if (!response.ok) throw new Error('Could not fetch components.json list');
+        const componentNames = await response.json();
+        
+        // Setup initial grid state
+        const grid = document.getElementById('components-grid');
+        grid.innerHTML = '';
+        
+        state.components = componentNames.map(name => ({
+          name,
+          tag: CONTRACT.toKebabTag(name),
+          status: 'pending', // pending, passed, warning, failed
+          issues: [],
+          warnings: [],
+          audited: false
+        }));
+
+        renderGrid();
+        updateStats();
+
+        // Run audits sequentially
+        for (const comp of state.components) {
+          await auditComponent(comp);
+          renderGrid();
+          updateStats();
+        }
+      } catch (err) {
+        console.error('Initialization error:', err);
+        document.getElementById('components-grid').innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; color: var(--color-danger); padding: 2rem; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--color-danger); border-radius: 1rem;">
+            Failed to load components list. Please ensure the project is served via an HTTP server.
+          </div>
+        `;
+      }
+    }
+
+    // Audit a single component dynamically
+    async function auditComponent(comp) {
+      const folderName = comp.name;
+      const basePath = `./src/components/${folderName}`;
+      
+      try {
+        const [jsRes, cssRes, htmlRes] = await Promise.all([
+          fetch(`${basePath}/index.js`),
+          fetch(`${basePath}/index.css`).catch(() => null),
+          fetch(`${basePath}/index.html`).catch(() => null)
+        ]);
+
+        if (!jsRes.ok) {
+          throw new Error('Missing index.js logic file');
+        }
+
+        const jsContent = await jsRes.text();
+        const cssContent = cssRes && cssRes.ok ? await cssRes.text() : '';
+        const htmlContent = htmlRes && htmlRes.ok ? await htmlRes.text() : '';
+
+        comp.htmlSize = htmlContent.length;
+        comp.cssSize = cssContent.length;
+        comp.jsSize = jsContent.length;
+        comp.totalSize = comp.htmlSize + comp.cssSize + comp.jsSize;
+        comp.tier = C.getComponentTier(comp.name);
+
+        const sizes = {
+          jsSize: comp.jsSize,
+          cssSize: comp.cssSize,
+          htmlSize: comp.htmlSize,
+          totalSize: comp.totalSize
+        };
+        const templateAudit = CONTRACT.auditTemplate(comp.name, {
+          js: jsContent,
+          css: cssContent,
+          html: htmlContent
+        });
+        const sizeAudit = C.auditPayloadSizes(sizes, comp.name);
+        const staticAudit = C.auditStaticCompliance(jsContent, cssContent, htmlContent, comp.name, null, sizes);
+        const consolidated = C.consolidateStatus(
+          [...templateAudit.issues, ...sizeAudit.issues, ...staticAudit.issues],
+          [...templateAudit.warnings, ...sizeAudit.warnings, ...staticAudit.warnings]
+        );
+        comp.issues.push(...consolidated.issues);
+        comp.warnings.push(...consolidated.warnings);
+
+        // 4. Live Sandbox Mount Audits (Real Browser DOM)
+        if (comp.issues.length === 0) {
+          await runSandboxMountTest(comp, jsContent, cssContent, htmlContent);
+        }
+
+      } catch (err) {
+        comp.issues.push({
+          name: 'General Sandbox Verification Crash',
+          desc: err.message
+        });
+      }
+
+      comp.audited = true;
+      comp.status = comp.issues.length > 0 ? 'failed' : (comp.warnings.length > 0 ? 'warning' : 'passed');
+      if (C.FAIL_ON_WARNINGS && comp.warnings.length > 0 && comp.issues.length === 0) {
+        comp.status = 'failed';
+        comp.warnings.forEach(w => comp.issues.push({ name: `[WARN→FAIL] ${w.name}`, desc: w.desc }));
+        comp.warnings = [];
+      }
+    }
+
+    // Mounts component dynamically in hidden sandboxed DOM and runs lifecycle verification checks
+    async function runSandboxMountTest(comp, jsContent, cssContent, htmlContent) {
+      return new Promise((resolve) => {
+        const resolvedJs = CONTRACT.inlineAssets(jsContent, cssContent, htmlContent);
+
+        const blob = new Blob([resolvedJs], { type: 'application/javascript' });
+        const blobUrl = URL.createObjectURL(blob);
+
+        const sandbox = document.getElementById('sandbox-container');
+        
+        // Dynamic import
+        import(blobUrl)
+          .then(async () => {
+            const RegisteredClass = customElements.get(comp.tag);
+            if (!RegisteredClass) {
+              comp.issues.push({
+                name: 'Mount: Custom Element Definition List',
+                desc: `Tag <${comp.tag}> was not found registered under customElements.`
+              });
+              resolve();
+              return;
+            }
+
+            let element;
+            const tStartMount = performance.now();
+            try {
+              element = document.createElement(comp.tag);
+              sandbox.appendChild(element);
+            } catch (e) {
+              comp.issues.push({
+                name: 'Mount: Element Instantiation/Connection',
+                desc: `Element crashed during setup: ${e.message}`
+              });
+              resolve();
+              return;
+            }
+            const tEndMount = performance.now();
+            const mountTime = tEndMount - tStartMount;
+            comp.mountTimeMs = mountTime;
+
+            if (!element.shadowRoot) {
+              comp.issues.push({
+                name: 'Mount: Shadow Root Attachment',
+                desc: 'Component class failed to attach a Shadow root to custom element.'
+              });
+            }
+
+            // Sync attribute-property tests and measure update latency
+            const observedAttributes = RegisteredClass.observedAttributes || [];
+            let totalUpdateLatency = 0;
+            
+            observedAttributes.forEach(attr => {
+              const propName = C.attrToPropertyName(attr);
+              const proto = RegisteredClass.prototype;
+              const propDesc = Object.getOwnPropertyDescriptor(proto, propName);
+              if (!propDesc || typeof propDesc.get !== 'function' || typeof propDesc.set !== 'function') {
+                comp.issues.push({
+                  name: 'Editable Property API',
+                  desc: `Observed "${attr}" needs get ${propName}() / set ${propName}() for enterprise/mobile integrators.`
+                });
+              }
+
+              // Measure update performance
+              const testVal =
+                attr === 'data' || attr.endsWith('-data')
+                  ? '[1,2,3]'
+                  : attr === 'sparkline'
+                    ? '1,2,3,4,5'
+                    : 'live-value';
+              const tStartUpdate = performance.now();
+              try {
+                element.setAttribute(attr, testVal);
+              } catch (e) {
+                comp.issues.push({
+                  name: 'Attribute update',
+                  desc: `setAttribute("${attr}") threw: ${e.message || String(e)}`
+                });
+              }
+              const tEndUpdate = performance.now();
+              totalUpdateLatency += (tEndUpdate - tStartUpdate);
+            });
+
+            comp.updateTimeMs = totalUpdateLatency;
+
+            // Disconnect lifecycle tests
+            try {
+              sandbox.removeChild(element);
+            } catch (e) {
+              comp.issues.push({
+                name: 'Mount: Disconnected Lifecycle Callback',
+                desc: `Component crashed inside disconnectedCallback during DOM teardown: ${e.message}`
+              });
+            }
+
+            resolve();
+          })
+          .catch(err => {
+            comp.issues.push({
+              name: 'Mount: ES Module Script Execution',
+              desc: `Dynamic browser execution failed: ${err.message}`
+            });
+            resolve();
+          })
+          .finally(() => {
+            URL.revokeObjectURL(blobUrl);
+          });
+      });
+    }
+
+    // Render Grid items
+    function renderGrid() {
+      const grid = document.getElementById('components-grid');
+      const filtered = state.components.filter(comp => {
+        const matchesFilter = 
+          state.currentFilter === 'all' ||
+          (state.currentFilter === 'passed' && comp.status === 'passed') ||
+          (state.currentFilter === 'warnings' && comp.status === 'warning') ||
+          (state.currentFilter === 'failed' && comp.status === 'failed');
+
+        const matchesSearch = 
+          comp.name.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+          comp.tag.toLowerCase().includes(state.searchQuery.toLowerCase());
+
+        return matchesFilter && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem;">
+            No components match current criteria.
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(comp => {
+        let badgeClass = 'badge-pending';
+        let badgeLabel = 'Pending';
+        let borderAccent = '';
+
+        if (comp.audited) {
+          if (comp.status === 'passed') {
+            badgeClass = 'badge-passed';
+            badgeLabel = 'Passed';
+            borderAccent = 'style="--accent-color: var(--color-success)"';
+          } else if (comp.status === 'warning') {
+            badgeClass = 'badge-warning';
+            badgeLabel = 'Warning';
+            borderAccent = 'style="--accent-color: var(--color-warning)"';
+          } else if (comp.status === 'failed') {
+            badgeClass = 'badge-failed';
+            badgeLabel = 'Failed';
+            borderAccent = 'style="--accent-color: var(--color-danger)"';
+          }
+        }
+
+        const summary = comp.audited 
+          ? `Issues: ${comp.issues.length} | Warnings: ${comp.warnings.length}`
+          : 'Waiting to audit...';
+
+        return `
+          <div class="component-card" ${borderAccent} onclick="showDetails('${comp.name}')">
+            <div class="component-header">
+              <span class="component-name">${comp.name}</span>
+              <span class="badge ${badgeClass}">${badgeLabel}</span>
+            </div>
+            <span class="component-tag">&lt;${comp.tag}&gt;</span>
+            <div class="results-summary">${summary}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update Stats Display
+    function updateStats() {
+      const stats = {
+        total: state.components.length,
+        passed: state.components.filter(c => c.audited && c.status === 'passed').length,
+        warnings: state.components.filter(c => c.audited && c.status === 'warning').length,
+        failed: state.components.filter(c => c.audited && c.status === 'failed').length
+      };
+
+      document.getElementById('stat-total').textContent = stats.total;
+      document.getElementById('stat-passed').textContent = stats.passed;
+      document.getElementById('stat-warnings').textContent = stats.warnings;
+      document.getElementById('stat-failed').textContent = stats.failed;
+    }
+
+    // Show Audit Detail Modal/Drawer
+    window.showDetails = function(name) {
+      const comp = state.components.find(c => c.name === name);
+      if (!comp || !comp.audited) return;
+
+      document.getElementById('drawer-comp-name').textContent = comp.name;
+      document.getElementById('drawer-comp-tag').textContent = `<${comp.tag}>`;
+      
+      const drawerContent = document.getElementById('drawer-content');
+      drawerContent.innerHTML = '';
+
+      // Critical Failures Section
+      const criticalGroup = document.createElement('div');
+      criticalGroup.className = 'audit-section';
+      criticalGroup.innerHTML = '<div class="audit-section-title">Critical Safety & Mount Tests</div>';
+      
+      if (comp.issues.length === 0) {
+        criticalGroup.innerHTML += `
+          <div class="audit-item">
+            <span class="audit-status-icon" style="color: var(--color-success)">✔</span>
+            <div class="audit-item-info">
+              <span class="audit-item-name">No critical violations detected</span>
+              <span class="audit-item-desc">Component is CSP compliant, memory safe, and mounts successfully.</span>
+            </div>
+          </div>
+        `;
+      } else {
+        comp.issues.forEach(issue => {
+          criticalGroup.innerHTML += `
+            <div class="audit-item">
+              <span class="audit-status-icon" style="color: var(--color-danger)">✘</span>
+              <div class="audit-item-info">
+                <span class="audit-item-name">${issue.name}</span>
+                <span class="audit-item-desc">${issue.desc}</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+      drawerContent.appendChild(criticalGroup);
+
+      // Warnings & Optimizations Section
+      const warningsGroup = document.createElement('div');
+      warningsGroup.className = 'audit-section';
+      warningsGroup.innerHTML = '<div class="audit-section-title">Warnings & Optimizations</div>';
+
+      if (comp.warnings.length === 0) {
+        warningsGroup.innerHTML += `
+          <div class="audit-item">
+            <span class="audit-status-icon" style="color: var(--color-success)">✔</span>
+            <div class="audit-item-info">
+              <span class="audit-item-name">All quality checks passed</span>
+              <span class="audit-item-desc">Payload sizes are optimal and class naming patterns are perfect.</span>
+            </div>
+          </div>
+        `;
+      } else {
+        comp.warnings.forEach(warn => {
+          warningsGroup.innerHTML += `
+            <div class="audit-item">
+              <span class="audit-status-icon" style="color: var(--color-warning)">⚠️</span>
+              <div class="audit-item-info">
+                <span class="audit-item-name">${warn.name}</span>
+                <span class="audit-item-desc">${warn.desc}</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+      drawerContent.appendChild(warningsGroup);
+      
+      // Performance Benchmarks Section
+      const perfGroup = document.createElement('div');
+      perfGroup.className = 'audit-section';
+      perfGroup.innerHTML = '<div class="audit-section-title">Performance Metrics & Benchmarks</div>';
+      
+      const htmlSizeKB = comp.htmlSize ? (comp.htmlSize / 1024).toFixed(2) : '0.00';
+      const cssSizeKB = comp.cssSize ? (comp.cssSize / 1024).toFixed(2) : '0.00';
+      const jsSizeKB = comp.jsSize ? (comp.jsSize / 1024).toFixed(2) : '0.00';
+      const totalSizeKB = comp.totalSize ? (comp.totalSize / 1024).toFixed(2) : '0.00';
+      const mountTimeStr = comp.mountTimeMs ? `${comp.mountTimeMs.toFixed(2)} ms` : 'N/A';
+      const updateTimeStr = comp.updateTimeMs ? `${comp.updateTimeMs.toFixed(2)} ms` : 'N/A';
+
+      perfGroup.innerHTML += `
+        <div class="audit-item" style="display: block; font-family: 'Outfit', sans-serif; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.03);">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; color: var(--text-muted);">
+            <thead>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 600; color: #fff;">
+                <th style="padding: 6px 0;">Metric</th>
+                <th style="padding: 6px 0; text-align: right;">Value</th>
+                <th style="padding: 6px 0; text-align: right;">Target</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                <td style="padding: 6px 0;">HTML Template Size</td>
+                <td style="padding: 6px 0; text-align: right; font-family: 'Fira Code', monospace; color: #fff;">${htmlSizeKB} KB</td>
+                <td style="padding: 6px 0; text-align: right;">&lt; 10 KB</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                <td style="padding: 6px 0;">CSS Stylesheet Size</td>
+                <td style="padding: 6px 0; text-align: right; font-family: 'Fira Code', monospace; color: #fff;">${cssSizeKB} KB</td>
+                <td style="padding: 6px 0; text-align: right;">&lt; 15 KB</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                <td style="padding: 6px 0;">JS Controller Size</td>
+                <td style="padding: 6px 0; text-align: right; font-family: 'Fira Code', monospace; color: #fff;">${jsSizeKB} KB</td>
+                <td style="padding: 6px 0; text-align: right;">&lt; 20 KB</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04); font-weight: 600;">
+                <td style="padding: 6px 0; color: #fff;">Total Payload Weight</td>
+                <td style="padding: 6px 0; text-align: right; font-family: 'Fira Code', monospace; color: var(--color-primary);">${totalSizeKB} KB</td>
+                <td style="padding: 6px 0; text-align: right;">&lt; 35 KB</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                <td style="padding: 6px 0;">DOM Instantiation & Mount</td>
+                <td style="padding: 6px 0; text-align: right; font-family: 'Fira Code', monospace; color: #fff;">${mountTimeStr}</td>
+                <td style="padding: 6px 0; text-align: right;">&lt; 3.0 ms</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0;">Observed Attributes Update</td>
+                <td style="padding: 6px 0; text-align: right; font-family: 'Fira Code', monospace; color: #fff;">${updateTimeStr}</td>
+                <td style="padding: 6px 0; text-align: right;">&lt; 1.5 ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+      drawerContent.appendChild(perfGroup);
+
+      // Show overlay
+      document.getElementById('drawer-overlay').classList.add('active');
+    };
+
+    // Close Drawer
+    function closeDrawer() {
+      document.getElementById('drawer-overlay').classList.remove('active');
+    }
+
+    // Set up interactive page events
+    function setupEventListeners() {
+      // Filter tab clicks
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          state.currentFilter = tab.getAttribute('data-filter');
+          renderGrid();
+        });
+      });
+
+      // Live search input
+      const searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        renderGrid();
+      });
+
+      // Drawer close click
+      document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+      document.getElementById('drawer-overlay').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('drawer-overlay')) {
+          closeDrawer();
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDrawer();
+      });
+    }
+
+    // Start auditing on window load
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OgulcanUI Visual Bench</title>
+  <link rel="stylesheet" href="./dist/ogulcan-ui.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0b1020;
+      color: #e5e7eb;
+      font-family: system-ui, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+      caret-color: transparent !important;
+    }
+
+    #stage {
+      box-sizing: border-box;
+      padding: 24px;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      width: 100%;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(99, 102, 241, 0.08), rgba(11, 16, 32, 0) 160px),
+        #0b1020;
+    }
+
+    #mount {
+      width: 100%;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+    }
+  </style>
+</head>
+<body>
+  <main id="stage">
+    <div id="mount"></div>
+  </main>
+
+  <script src="./dist/ogulcan-ui.js"></script>
+  <script>
+    (function () {
+      const mount = document.getElementById('mount');
+      const stage = document.getElementById('stage');
+
+      function toTag(name) {
+        return 'ogulcan-' + name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      }
+
+      function sampleForAttr(attr) {
+        if (!attr) return 'live-value';
+        if (attr === 'data' || attr.endsWith('-data')) return '[1,2,3,4,5]';
+        if (attr === 'sparkline' || attr === 'values') return '12,24,18,32,28,40';
+        if (attr === 'headers') return 'Region,Status,Value';
+        if (attr === 'rows') return '[["West","Healthy","48"],["East","Watch","32"]]';
+        if (attr === 'events') return '[{"time":"09:10 PT","text":"Settlement completed","status":"success"}]';
+        if (attr === 'features') return '["Approval chain","PCI zone","Audit export"]';
+        if (attr === 'items') return '["Alpha","Beta","Gamma"]';
+        if (attr === 'avatars') return '[{"name":"Ada","initials":"AD"},{"name":"Lin","initials":"LN"}]';
+        if (attr === 'entries') return '[{"label":"Merchant settlement","subtitle":"Card present / Midwest region","time":"09:14 PT","state":"Cleared","amount":18245.12},{"label":"Payroll treasury move","subtitle":"ACH same-day batch","time":"09:08 PT","state":"Queued","amount":9040.00},{"label":"Liquidity sweep","subtitle":"Reserve ladder bucket","time":"08:56 PT","state":"Balanced","amount":120500.75}]';
+        if (attr === 'order-data') return '{"orderId":"ORD-9001","customer":"Treasury Ops","items":[{"label":"Treasury sweep","detail":"Settlement window 15m","quantity":1,"amount":42840.55},{"label":"FX conversion hedge","detail":"EUR/USD lock","quantity":1,"amount":1190.12}],"subtotal":44030.67,"fees":16.4,"tax":0,"discount":-150,"total":43897.07}';
+        if (attr === 'series') return '[61200,61840,62550,62980,64120,65420,64910,66180,67220,68440,69110,70280]';
+        if (attr === 'steps') return 'Review,Approve,Release,Confirm';
+        if (attr === 'tags') return '["ops","risk","compliance"]';
+        if (attr === 'logs') return '["Ready","Watching","Released"]';
+        if (attr === 'colors') return '#6366f1,#10b981,#f59e0b';
+        if (attr === 'placeholder') return 'Search settlements';
+        if (attr === 'label') return 'Realtime metric';
+        if (attr === 'cta-label') return 'Approve';
+        if (attr === 'currency') return 'USD';
+        if (attr === 'status') return 'Balanced';
+        if (attr === 'status-text') return 'Streaming healthy';
+        return 'live-value';
+      }
+
+      function nextFrame() {
+        return new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+
+      function clearMount() {
+        while (mount.firstChild) mount.removeChild(mount.firstChild);
+      }
+
+      function applyLayout(name, el, spec) {
+        stage.style.width = spec.width + 'px';
+        stage.style.minHeight = spec.height + 'px';
+        stage.style.height = spec.height + 'px';
+        mount.style.width = '100%';
+        mount.style.height = '100%';
+
+        if (name === 'DashboardLayout') {
+          el.style.display = 'block';
+          el.style.width = '100%';
+          el.style.height = '100%';
+        } else if (name === 'AlertBanner') {
+          mount.style.alignItems = 'flex-start';
+          el.style.display = 'block';
+          el.style.width = '100%';
+        } else {
+          el.style.display = 'block';
+          el.style.width = '100%';
+        }
+      }
+
+      async function renderOgulcanVisualFor(spec) {
+        clearMount();
+        mount.style.alignItems = 'stretch';
+        mount.style.justifyContent = 'stretch';
+
+        const tag = toTag(spec.name);
+        const Cls = customElements.get(tag);
+        if (!Cls) throw new Error('Missing registration for ' + tag);
+
+        const el = document.createElement(tag);
+        applyLayout(spec.name, el, spec);
+        mount.appendChild(el);
+
+        const attrs = Cls.observedAttributes || [];
+        attrs.forEach((attr) => el.setAttribute(attr, sampleForAttr(attr)));
+
+        await nextFrame();
+        await nextFrame();
+
+        const rect = stage.getBoundingClientRect();
+        return {
+          name: spec.name,
+          x: rect.left,
+          y: rect.top,
+          width: rect.width,
+          height: rect.height
+        };
+      }
+
+      async function compareVisualPngs(leftBase64, rightBase64) {
+        const [leftImg, rightImg] = await Promise.all([
+          loadImage(`data:image/png;base64,${leftBase64}`),
+          loadImage(`data:image/png;base64,${rightBase64}`)
+        ]);
+
+        if (leftImg.width !== rightImg.width || leftImg.height !== rightImg.height) {
+          return {
+            width: leftImg.width,
+            height: leftImg.height,
+            otherWidth: rightImg.width,
+            otherHeight: rightImg.height,
+            diffPixels: Number.MAX_SAFE_INTEGER,
+            totalPixels: Math.max(leftImg.width * leftImg.height, rightImg.width * rightImg.height),
+            maxChannelDelta: 255
+          };
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = leftImg.width;
+        canvas.height = leftImg.height;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(leftImg, 0, 0);
+        const leftData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(rightImg, 0, 0);
+        const rightData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+        const channelTolerance = 24;
+        let diffPixels = 0;
+        let maxChannelDelta = 0;
+        for (let i = 0; i < leftData.length; i += 4) {
+          const dr = Math.abs(leftData[i] - rightData[i]);
+          const dg = Math.abs(leftData[i + 1] - rightData[i + 1]);
+          const db = Math.abs(leftData[i + 2] - rightData[i + 2]);
+          const da = Math.abs(leftData[i + 3] - rightData[i + 3]);
+          const delta = Math.max(dr, dg, db, da);
+          if (delta > channelTolerance) diffPixels++;
+          if (delta > maxChannelDelta) maxChannelDelta = delta;
+        }
+
+        return {
+          width: leftImg.width,
+          height: leftImg.height,
+          diffPixels,
+          totalPixels: leftImg.width * leftImg.height,
+          maxChannelDelta
+        };
+      }
+
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error('Failed to load image for visual compare.'));
+          img.src = src;
+        });
+      }
+
+      window.renderOgulcanVisualFor = renderOgulcanVisualFor;
+      window.compareVisualPngs = compareVisualPngs;
+      window.__OGULCAN_VISUAL_READY__ = true;
+
+      async function resolveSpecForComponent(componentName) {
+        const defaults = { name: componentName, width: 820, height: 420 };
+        const catalogs = [
+          './tests/playwright/component-specs.json',
+          './visual-baselines/specs.json'
+        ];
+
+        for (const catalogPath of catalogs) {
+          try {
+            const res = await fetch(catalogPath);
+            if (!res.ok) continue;
+            const list = await res.json();
+            const found = list.find((entry) => entry.name === componentName);
+            if (found) {
+              return {
+                name: found.name,
+                width: found.width || defaults.width,
+                height: found.height || defaults.height
+              };
+            }
+          } catch (_) {
+            /* try next catalog */
+          }
+        }
+
+        return defaults;
+      }
+
+      async function autoRenderFromQuery() {
+        const componentName = new URLSearchParams(window.location.search).get('component');
+        if (!componentName) return;
+
+        const spec = await resolveSpecForComponent(componentName);
+        await renderOgulcanVisualFor(spec);
+      }
+
+      autoRenderFromQuery();
+    })();
+  </script>
+</body>
+</html>

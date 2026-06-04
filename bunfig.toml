@@ -1,0 +1,11 @@
+# OgulcanUI — Bun-only toolchain (banks + CI)
+[install]
+optional = true
+dev = true
+
+[run]
+# Bun executes scripts/*.js directly; no Node shim required
+bun = true
+
+[test]
+preload = []

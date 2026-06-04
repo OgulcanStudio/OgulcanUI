@@ -1,0 +1,566 @@
+[
+  {
+    "name": "CustomerJourneySankey",
+    "tag": "ogulcan-customer-journey-sankey",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "RevenueStreamTreemap",
+    "tag": "ogulcan-revenue-stream-treemap",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ChannelMixDonut",
+    "tag": "ogulcan-channel-mix-donut",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ConversionPathFunnel",
+    "tag": "ogulcan-conversion-path-funnel",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "SupplyChainGantt",
+    "tag": "ogulcan-supply-chain-gantt",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "DependencyRadar",
+    "tag": "ogulcan-dependency-radar",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "AllocationWaterfall",
+    "tag": "ogulcan-allocation-waterfall",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "SegmentBridgePareto",
+    "tag": "ogulcan-segment-bridge-pareto",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ProductAdoptionStack",
+    "tag": "ogulcan-product-adoption-stack",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "WorkflowStepArea",
+    "tag": "ogulcan-workflow-step-area",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "DemandForecastProjection",
+    "tag": "ogulcan-demand-forecast-projection",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "AnomalyBandControl",
+    "tag": "ogulcan-anomaly-band-control",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "CohortRetentionHeatmap",
+    "tag": "ogulcan-cohort-retention-heatmap",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "MarketPulseLine",
+    "tag": "ogulcan-market-pulse-line",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "SensorDriftScatter",
+    "tag": "ogulcan-sensor-drift-scatter",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "QualityHistogram",
+    "tag": "ogulcan-quality-histogram",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ScenarioSensitivityMultiLine",
+    "tag": "ogulcan-scenario-sensitivity-multi-line",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "VolatilityBoxplot",
+    "tag": "ogulcan-volatility-boxplot",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "GrowthCurveArea",
+    "tag": "ogulcan-growth-curve-area",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ThresholdRing",
+    "tag": "ogulcan-threshold-ring",
+    "width": 520,
+    "height": 420,
+    "attrs": [
+      "value",
+      "min",
+      "max",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ComplianceObligationMatrix",
+    "tag": "ogulcan-compliance-obligation-matrix",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "IncidentSeverityPareto",
+    "tag": "ogulcan-incident-severity-pareto",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "AccessPostureRadar",
+    "tag": "ogulcan-access-posture-radar",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "RiskAppetiteGauge",
+    "tag": "ogulcan-risk-appetite-gauge",
+    "width": 520,
+    "height": 420,
+    "attrs": [
+      "value",
+      "min",
+      "max",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "AuditFindingWaterfall",
+    "tag": "ogulcan-audit-finding-waterfall",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ControlCoverageBullet",
+    "tag": "ogulcan-control-coverage-bullet",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "FraudPatternScatter",
+    "tag": "ogulcan-fraud-pattern-scatter",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "PolicyExceptionHeatmap",
+    "tag": "ogulcan-policy-exception-heatmap",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ExposureLimitBars",
+    "tag": "ogulcan-exposure-limit-bars",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "BreachRateRing",
+    "tag": "ogulcan-breach-rate-ring",
+    "width": 520,
+    "height": 420,
+    "attrs": [
+      "value",
+      "min",
+      "max",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "UptimeKpiSpark",
+    "tag": "ogulcan-uptime-kpi-spark",
+    "width": 520,
+    "height": 280,
+    "attrs": [
+      "title",
+      "value",
+      "change",
+      "trend",
+      "sparkline",
+      "color"
+    ],
+    "kpi": true
+  },
+  {
+    "name": "QueueDepthBars",
+    "tag": "ogulcan-queue-depth-bars",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "LatencyControlChart",
+    "tag": "ogulcan-latency-control-chart",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "CapacityStackedTrend",
+    "tag": "ogulcan-capacity-stacked-trend",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ReleaseTrainGantt",
+    "tag": "ogulcan-release-train-gantt",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ServiceHealthMatrix",
+    "tag": "ogulcan-service-health-matrix",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ErrorBudgetLine",
+    "tag": "ogulcan-error-budget-line",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ThroughputHistogram",
+    "tag": "ogulcan-throughput-histogram",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "WorkforceUtilizationHBars",
+    "tag": "ogulcan-workforce-utilization-hbars",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "BurnRateKpi",
+    "tag": "ogulcan-burn-rate-kpi",
+    "width": 520,
+    "height": 280,
+    "attrs": [
+      "title",
+      "value",
+      "change",
+      "trend",
+      "sparkline",
+      "color"
+    ],
+    "kpi": true
+  },
+  {
+    "name": "PriceElasticityScatter",
+    "tag": "ogulcan-price-elasticity-scatter",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "PortfolioOptimizationRadar",
+    "tag": "ogulcan-portfolio-optimization-radar",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "BudgetTradeoffWaterfall",
+    "tag": "ogulcan-budget-tradeoff-waterfall",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "PrioritizationTreemap",
+    "tag": "ogulcan-prioritization-treemap",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "StrategyFunnel",
+    "tag": "ogulcan-strategy-funnel",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ForecastConfidenceBoxplot",
+    "tag": "ogulcan-forecast-confidence-boxplot",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "OpportunityPareto",
+    "tag": "ogulcan-opportunity-pareto",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "InvestmentMixDonut",
+    "tag": "ogulcan-investment-mix-donut",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "PlanVsActualBullet",
+    "tag": "ogulcan-plan-vs-actual-bullet",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  },
+  {
+    "name": "ScenarioOutcomeProjection",
+    "tag": "ogulcan-scenario-outcome-projection",
+    "width": 820,
+    "height": 420,
+    "attrs": [
+      "data",
+      "label",
+      "color"
+    ]
+  }
+]
