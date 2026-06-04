@@ -2,6 +2,8 @@
 
 **Fastest-first, zero-dependency chart Web Components for enterprise dashboards.**
 
+[![npm package: ogulcan-ui](https://img.shields.io/npm/v/ogulcan-ui?label=npm%20package&color=cb3837)](https://www.npmjs.com/package/ogulcan-ui)
+
 OgulcanUI v0.1.0 ships **50 vanilla Web Component charts** in one browser file. It is built for teams that need dashboard charts to mount quickly, update quickly, stay small, and work without React, Svelte, Vue, Chart.js, D3, hydration, build tooling, or runtime dependencies.
 
 ![OgulcanUI chart catalog showing live chart cards, copyable snippets, categories, and CDN usage](docs/charts.png)
@@ -37,6 +39,16 @@ The screenshot is from one local browser run and will vary by device. That is in
 | License | MIT |
 
 OgulcanUI is not a code-copy starter kit. It is a chart runtime you consume as a browser file.
+
+## Quick Start: npm
+
+Install the package from npm:
+
+```bash
+npm install ogulcan-ui
+```
+
+[View `ogulcan-ui` on npm](https://www.npmjs.com/package/ogulcan-ui)
 
 ## Quick Start: CDN
 
