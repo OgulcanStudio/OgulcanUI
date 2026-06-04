@@ -67,11 +67,14 @@
   "homepage": "https://ogulcan.studio",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrerduran/OgulcanUI.git"
+    "url": "git+https://github.com/OgulcanStudio/OgulcanUI.git"
   },
   "bugs": {
-    "url": "https://github.com/mrerduran/OgulcanUI/issues",
+    "url": "https://github.com/OgulcanStudio/OgulcanUI/issues",
     "email": "npm@ogulcan.studio"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0"
